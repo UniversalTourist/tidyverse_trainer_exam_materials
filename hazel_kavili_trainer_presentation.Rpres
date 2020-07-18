@@ -1,0 +1,128 @@
+Week 1: Intro to dplyr
+========================================================
+author: Hazel KAVILI
+date: "`r Sys.Date()`"
+autosize: true
+
+Install Libraries
+========================================================
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
+#find mine's blog post where explain why directly load tidyverse instead of dplyr
+library(tidyverse)
+```
+
+Load Data Into R
+========================================================
+
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
+##don't forget to add the link data to read from csv and mention that you can read it from web or from your pc
+nordic_data <- read_csv("nordic_data.csv")
+```
+
+Summary of data
+========================================================
+
+There are some functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`:
+
+```{r, warning=FALSE, message=FALSE}
+glimpse(nordic_data)
+```
+
+
+Comparison with base R and Tidyverse
+========================================================
+```{r, warning=FALSE, message=FALSE}
+
+```
+
+
+
+========================================================
+## Did you see *Pipes*? *( %>% )*
+
+```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE }
+nordic_data %>% 
+  select(Country_Name, Fertility_rate_total_births_per_woman_, year) %>% 
+  filter( year == 1960) 
+```
+
+
+
+========================================================
+## *Select:* Choosing is not losing!
+
+```{r, warning=FALSE, message=FALSE}
+
+```
+
+
+========================================================
+## *Filter:* Do we want everything?
+
+```{r, warning=FALSE, message=FALSE}
+
+```
+
+How should we fill the blank areas?
+========================================================
+
+```{r, eval=FALSE}
+
+```
+
+Here is the solution:
+========================================================
+
+```{r}
+```
+
+
+========================================================
+## *Mutate:* I need a new column!
+
+
+
+
+========================================================
+## *Arrange:*  Let's order the rows
+```{r}
+
+```
+
+Let's put it all together!
+========================================================
+
+```{r}
+
+```
+
+Here is the solution
+========================================================
+
+```{r}
+```
+
+
+Good job!
+========================================================
+Thank you for joining the training! 
+
+You can find lesson materials in here: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
