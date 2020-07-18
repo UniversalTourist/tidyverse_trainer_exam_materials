@@ -1,4 +1,4 @@
-Week 1: Intro to dplyr
+Week 1: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
 date: "2020-07-18"
@@ -6,116 +6,107 @@ autosize: true
 
 Install Libraries
 ========================================================
+We'll load the packages with `library(tidyverse)` instead of loading the core packages. Today we'll focus on `dplyr` (and one function from `readr` package for one-time).
 
 
 ```r
-#find mine's blog post where explain why directly load tidyverse instead of dplyr
+#install.packages("tidyverse")
 library(tidyverse)
 ```
 
 Load Data Into R
 ========================================================
+We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
 
 
 ```r
-##don't forget to add the link data to read from csv and mention that you can read it from web or from your pc
-nordic_data <- read_csv("nordic_data.csv")
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 ```
 
-Summary of data - 1
+First Glimpse to Data 
 ========================================================
-
-There are some functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`:
+Let's take a look at the data set with `glimpse` function.
 
 
 ```r
-glimpse(nordic_data)
+glimpse(coffee_ratings)
 ```
 
 ```
-Rows: 236
-Columns: 37
-$ year                                                         <dbl> 1960, 19…
-$ Country_Name                                                 <chr> "Denmark…
-$ Country_Code                                                 <chr> "DNK", "…
-$ Adolescent_fertility_rate_births_per_1_000_women_ages_15_19_ <dbl> 44.1754,…
-$ Age_dependency_ratio_of_working_age_population_              <dbl> 55.78849…
-$ Age_population_age_0_female_interpolated                     <dbl> 38797, 3…
-$ Age_population_age_0_male_interpolated                       <dbl> 40519, 4…
-$ Age_population_age_01_female_interpolated                    <dbl> 36505, 3…
-$ Age_population_age_01_male_interpolated                      <dbl> 38452, 4…
-$ Age_population_age_02_female_interpolated                    <dbl> 35003, 3…
-$ Age_population_age_02_male_interpolated                      <dbl> 37117, 3…
-$ Age_population_age_03_female_interpolated                    <dbl> 34189, 3…
-$ Age_population_age_03_male_interpolated                      <dbl> 36418, 3…
-$ Age_population_age_04_female_interpolated                    <dbl> 33961, 3…
-$ Age_population_age_04_male_interpolated                      <dbl> 36259, 3…
-$ Age_population_age_05_female_interpolated                    <dbl> 34218, 3…
-$ Age_population_age_05_male_interpolated                      <dbl> 36545, 3…
-$ Birth_rate_crude_per_1_000_people_                           <dbl> 16.6, 16…
-$ Death_rate_crude_per_1_000_people_                           <dbl> 9.5, 9.4…
-$ Fertility_rate_total_births_per_woman_                       <dbl> 2.57, 2.…
-$ GDP_current_US_                                              <dbl> 62489468…
-$ GDP_per_capita_Current_US_                                   <dbl> 1364.517…
-$ Inflation_consumer_prices_annual_                            <dbl> 1.255230…
-$ Life_expectancy_at_birth_female_years_                       <dbl> 74.00, 7…
-$ Life_expectancy_at_birth_male_years_                         <dbl> 70.44, 7…
-$ Population_ages_0_14_female                                  <dbl> 561643, …
-$ Population_ages_0_14_of_total_                               <dbl> 25.20778…
-$ Population_ages_15_64_female                                 <dbl> 1484063,…
-$ Population_ages_15_64_male                                   <dbl> 1455561,…
-$ Population_ages_15_64_of_total_                              <dbl> 64.18959…
-$ Population_ages_15_64_total                                  <dbl> 2939628,…
-$ Population_ages_65_and_above_female                          <dbl> 261702, …
-$ Population_ages_65_and_above_of_total_                       <dbl> 10.60263…
-$ Population_female                                            <dbl> 2307409,…
-$ Population_female_of_total_                                  <dbl> 50.38448…
-$ Population_total                                             <dbl> 4579603,…
-$ GDP_growth_annual_                                           <dbl> NA, 6.37…
+Rows: 1,339
+Columns: 43
+$ total_cup_points      <dbl> 90.58, 89.92, 89.75, 89.00, 88.83, 88.83, 88.75…
+$ species               <chr> "Arabica", "Arabica", "Arabica", "Arabica", "Ar…
+$ owner                 <chr> "metad plc", "metad plc", "grounds for health a…
+$ country_of_origin     <chr> "Ethiopia", "Ethiopia", "Guatemala", "Ethiopia"…
+$ farm_name             <chr> "metad plc", "metad plc", "san marcos barrancas…
+$ lot_number            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ mill                  <chr> "metad plc", "metad plc", NA, "wolensu", "metad…
+$ ico_number            <chr> "2014/2015", "2014/2015", NA, NA, "2014/2015", …
+$ company               <chr> "metad agricultural developmet plc", "metad agr…
+$ altitude              <chr> "1950-2200", "1950-2200", "1600 - 1800 m", "180…
+$ region                <chr> "guji-hambela", "guji-hambela", NA, "oromia", "…
+$ producer              <chr> "METAD PLC", "METAD PLC", NA, "Yidnekachew Dabe…
+$ number_of_bags        <dbl> 300, 300, 5, 320, 300, 100, 100, 300, 300, 50, …
+$ bag_weight            <chr> "60 kg", "60 kg", "1", "60 kg", "60 kg", "30 kg…
+$ in_country_partner    <chr> "METAD Agricultural Development plc", "METAD Ag…
+$ harvest_year          <chr> "2014", "2014", NA, "2014", "2014", "2013", "20…
+$ grading_date          <chr> "April 4th, 2015", "April 4th, 2015", "May 31st…
+$ owner_1               <chr> "metad plc", "metad plc", "Grounds for Health A…
+$ variety               <chr> NA, "Other", "Bourbon", NA, "Other", NA, "Other…
+$ processing_method     <chr> "Washed / Wet", "Washed / Wet", NA, "Natural / …
+$ aroma                 <dbl> 8.67, 8.75, 8.42, 8.17, 8.25, 8.58, 8.42, 8.25,…
+$ flavor                <dbl> 8.83, 8.67, 8.50, 8.58, 8.50, 8.42, 8.50, 8.33,…
+$ aftertaste            <dbl> 8.67, 8.50, 8.42, 8.42, 8.25, 8.42, 8.33, 8.50,…
+$ acidity               <dbl> 8.75, 8.58, 8.42, 8.42, 8.50, 8.50, 8.50, 8.42,…
+$ body                  <dbl> 8.50, 8.42, 8.33, 8.50, 8.42, 8.25, 8.25, 8.33,…
+$ balance               <dbl> 8.42, 8.42, 8.42, 8.25, 8.33, 8.33, 8.25, 8.50,…
+$ uniformity            <dbl> 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00…
+$ clean_cup             <dbl> 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,…
+$ sweetness             <dbl> 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00…
+$ cupper_points         <dbl> 8.75, 8.58, 9.25, 8.67, 8.58, 8.33, 8.50, 9.00,…
+$ moisture              <dbl> 0.12, 0.12, 0.00, 0.11, 0.12, 0.11, 0.11, 0.03,…
+$ category_one_defects  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ quakers               <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ color                 <chr> "Green", "Green", NA, "Green", "Green", "Bluish…
+$ category_two_defects  <dbl> 0, 1, 0, 2, 2, 1, 0, 0, 0, 4, 1, 0, 0, 2, 2, 0,…
+$ expiration            <chr> "April 3rd, 2016", "April 3rd, 2016", "May 31st…
+$ certification_body    <chr> "METAD Agricultural Development plc", "METAD Ag…
+$ certification_address <chr> "309fcf77415a3661ae83e027f7e5f05dad786e44", "30…
+$ certification_contact <chr> "19fef5a731de2db57d16da10287413f5f99bc2dd", "19…
+$ unit_of_measurement   <chr> "m", "m", "m", "m", "m", "m", "m", "m", "m", "m…
+$ altitude_low_meters   <dbl> 1950.0, 1950.0, 1600.0, 1800.0, 1950.0, NA, NA,…
+$ altitude_high_meters  <dbl> 2200.0, 2200.0, 1800.0, 2200.0, 2200.0, NA, NA,…
+$ altitude_mean_meters  <dbl> 2075.0, 2075.0, 1700.0, 2000.0, 2075.0, NA, NA,…
 ```
 
-Summary of data - 2
+Summary of Data 
 ========================================================
+There are some other functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`
+
 
 ```r
-head(nordic_data)
+head(coffee_ratings, n = 3)
 ```
 
 ```
-# A tibble: 6 x 37
-   year Country_Name Country_Code Adolescent_fert… Age_dependency_…
-  <dbl> <chr>        <chr>                   <dbl>            <dbl>
-1  1960 Denmark      DNK                      44.2             55.8
-2  1961 Denmark      DNK                      45.0             55.6
-3  1962 Denmark      DNK                      45.9             55.2
-4  1963 Denmark      DNK                      45.5             54.8
-5  1964 Denmark      DNK                      45.1             54.5
-6  1965 Denmark      DNK                      44.7             54.3
-# … with 32 more variables: Age_population_age_0_female_interpolated <dbl>,
-#   Age_population_age_0_male_interpolated <dbl>,
-#   Age_population_age_01_female_interpolated <dbl>,
-#   Age_population_age_01_male_interpolated <dbl>,
-#   Age_population_age_02_female_interpolated <dbl>,
-#   Age_population_age_02_male_interpolated <dbl>,
-#   Age_population_age_03_female_interpolated <dbl>,
-#   Age_population_age_03_male_interpolated <dbl>,
-#   Age_population_age_04_female_interpolated <dbl>,
-#   Age_population_age_04_male_interpolated <dbl>,
-#   Age_population_age_05_female_interpolated <dbl>,
-#   Age_population_age_05_male_interpolated <dbl>,
-#   Birth_rate_crude_per_1_000_people_ <dbl>,
-#   Death_rate_crude_per_1_000_people_ <dbl>,
-#   Fertility_rate_total_births_per_woman_ <dbl>, GDP_current_US_ <dbl>,
-#   GDP_per_capita_Current_US_ <dbl>, Inflation_consumer_prices_annual_ <dbl>,
-#   Life_expectancy_at_birth_female_years_ <dbl>,
-#   Life_expectancy_at_birth_male_years_ <dbl>,
-#   Population_ages_0_14_female <dbl>, Population_ages_0_14_of_total_ <dbl>,
-#   Population_ages_15_64_female <dbl>, Population_ages_15_64_male <dbl>,
-#   Population_ages_15_64_of_total_ <dbl>, Population_ages_15_64_total <dbl>,
-#   Population_ages_65_and_above_female <dbl>,
-#   Population_ages_65_and_above_of_total_ <dbl>, Population_female <dbl>,
-#   Population_female_of_total_ <dbl>, Population_total <dbl>,
-#   GDP_growth_annual_ <dbl>
+# A tibble: 3 x 43
+  total_cup_points species owner country_of_orig… farm_name lot_number mill 
+             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+1             90.6 Arabica meta… Ethiopia         "metad p… <NA>       meta…
+2             89.9 Arabica meta… Ethiopia         "metad p… <NA>       meta…
+3             89.8 Arabica grou… Guatemala        "san mar… <NA>       <NA> 
+# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
+#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
+#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
+#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
+#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
+#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
+#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
+#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
+#   certification_address <chr>, certification_contact <chr>,
+#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
+#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
 ```
 
 
@@ -123,13 +114,13 @@ Comparison with base R and Tidyverse
 ========================================================
 
 ```r
-nordic_data[ , c('year', 'Country_Code')]
+coffee_ratings[ , c('species', 'country_of_origin')]
 ```
 
 
 ```r
-nordic_data %>% 
-  select(year, Country_Code)
+coffee_ratings %>% 
+  select(species, country_of_origin)
 ```
 
 
@@ -138,9 +129,10 @@ nordic_data %>%
 
 
 ```r
-nordic_data %>% 
-  group_by(Country_Name) %>%
-  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = TRUE))
+coffee_ratings %>%
+  group_by(species) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))
 ```
 
 
@@ -150,21 +142,21 @@ nordic_data %>%
 
 
 ```r
-nordic_data %>% 
-  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, certification_body) %>% 
   head()
 ```
 
 ```
-# A tibble: 6 x 3
-   year Country_Name Life_expectancy_at_birth_female_years_
-  <dbl> <chr>                                         <dbl>
-1  1960 Denmark                                        74  
-2  1961 Denmark                                        74.4
-3  1962 Denmark                                        74.4
-4  1963 Denmark                                        74.5
-5  1964 Denmark                                        74.8
-6  1965 Denmark                                        74.6
+# A tibble: 6 x 4
+  species country_of_origin color        certification_body                
+  <chr>   <chr>             <chr>        <chr>                             
+1 Arabica Ethiopia          Green        METAD Agricultural Development plc
+2 Arabica Ethiopia          Green        METAD Agricultural Development plc
+3 Arabica Guatemala         <NA>         Specialty Coffee Association      
+4 Arabica Ethiopia          Green        METAD Agricultural Development plc
+5 Arabica Ethiopia          Green        METAD Agricultural Development plc
+6 Arabica Brazil            Bluish-Green Specialty Coffee Institute of Asia
 ```
 
 
@@ -173,21 +165,24 @@ nordic_data %>%
 
 
 ```r
-nordic_data %>% 
-  select(1:2, 34:36) %>% 
+coffee_ratings %>% 
+  select(1:4, 21:34) %>% 
   head()
 ```
 
 ```
-# A tibble: 6 x 5
-   year Country_Name Population_female Population_female_of_to… Population_total
-  <dbl> <chr>                    <dbl>                    <dbl>            <dbl>
-1  1960 Denmark                2307409                     50.4          4579603
-2  1961 Denmark                2324007                     50.4          4611687
-3  1962 Denmark                2342694                     50.4          4647727
-4  1963 Denmark                2361695                     50.4          4684483
-5  1964 Denmark                2380857                     50.4          4722072
-6  1965 Denmark                2399304                     50.4          4759012
+# A tibble: 6 x 18
+  total_cup_points species owner country_of_orig… aroma flavor aftertaste
+             <dbl> <chr>   <chr> <chr>            <dbl>  <dbl>      <dbl>
+1             90.6 Arabica meta… Ethiopia          8.67   8.83       8.67
+2             89.9 Arabica meta… Ethiopia          8.75   8.67       8.5 
+3             89.8 Arabica grou… Guatemala         8.42   8.5        8.42
+4             89   Arabica yidn… Ethiopia          8.17   8.58       8.42
+5             88.8 Arabica meta… Ethiopia          8.25   8.5        8.25
+6             88.8 Arabica ji-a… Brazil            8.58   8.42       8.42
+# … with 11 more variables: acidity <dbl>, body <dbl>, balance <dbl>,
+#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
+#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>
 ```
 
 ========================================================
@@ -195,30 +190,41 @@ nordic_data %>%
 
 
 ```r
-nordic_data %>% 
-  select(year, Country_Name, Population_ages_15_64_female, Population_ages_15_64_total, Population_ages_15_64_male) %>%
-  filter(year == 1960)
+coffee_ratings %>% 
+  filter(country_of_origin == "Ethiopia") %>% 
+  head(n = 3)
 ```
 
 ```
-# A tibble: 4 x 5
-   year Country_Name Population_ages_15_… Population_ages_15… Population_ages_1…
-  <dbl> <chr>                       <dbl>               <dbl>              <dbl>
-1  1960 Denmark                   1484063             2939628            1455561
-2  1960 Finland                   1432559             2758124            1325559
-3  1960 Norway                    1127457             2257422            1129967
-4  1960 Sweden                    2456706             4925522            2468814
+# A tibble: 3 x 43
+  total_cup_points species owner country_of_orig… farm_name lot_number mill 
+             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+1             90.6 Arabica meta… Ethiopia         metad plc <NA>       meta…
+2             89.9 Arabica meta… Ethiopia         metad plc <NA>       meta…
+3             89   Arabica yidn… Ethiopia         yidnekac… <NA>       wole…
+# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
+#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
+#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
+#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
+#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
+#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
+#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
+#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
+#   certification_address <chr>, certification_contact <chr>,
+#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
+#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
 ```
 
 How should we fill the blank areas?
 ========================================================
-We need to *select* year, Country_Name, Population_female_of_total_ and the *filter* Country_Name for only Finland and year higher than 1965, then look at the first 10 rows.
+We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
+
 
 ```r
-nordic data %>% 
-  ____(__:__, Population_female_of_total_) %>% 
-  ____(____ == "Finland") %>%
-  ____(year >= ___) %>% 
+coffee_ratings data %>% 
+  ____(_:_, number_of_bags) %>% 
+  ____(____ == "Brazil") %>%
+  ____(total_cup_points > ___) %>% 
   head(n = __)
 ```
 
@@ -227,69 +233,62 @@ Here is the solution:
 
 
 ```r
-nordic_data %>% 
- select(1:2, Population_female_of_total_)  %>% 
-  filter(Country_Name == "Finland") %>% 
-  filter(year >= 1965) %>% 
-  head(n = 10)
+coffee_ratings %>% 
+  select(1:4, number_of_bags) %>% 
+  filter(country_of_origin == "Brazil") %>%
+  filter(total_cup_points > 70) %>% 
+  head(n = 3)
 ```
 
 ```
-# A tibble: 10 x 3
-    year Country_Name Population_female_of_total_
-   <dbl> <chr>                              <dbl>
- 1  1965 Finland                             51.7
- 2  1966 Finland                             51.7
- 3  1967 Finland                             51.7
- 4  1968 Finland                             51.7
- 5  1969 Finland                             51.7
- 6  1970 Finland                             51.7
- 7  1971 Finland                             51.7
- 8  1972 Finland                             51.7
- 9  1973 Finland                             51.7
-10  1974 Finland                             51.7
+# A tibble: 3 x 5
+  total_cup_points species owner     country_of_origin number_of_bags
+             <dbl> <chr>   <chr>     <chr>                      <dbl>
+1             88.8 Arabica ji-ae ahn Brazil                       100
+2             86.9 Arabica nucoffee  Brazil                         3
+3             86.4 Arabica nucoffee  Brazil                        29
 ```
 
 ========================================================
 ## *Arrange:*  Let's order the rows
 
 ```r
-nordic_data %>% 
-  select(year, Country_Code, Population_total) %>% 
-  arrange(Population_total) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, sweetness) %>% 
+  arrange(sweetness) %>% 
   head()
 ```
 
 ```
-# A tibble: 6 x 3
-   year Country_Code Population_total
-  <dbl> <chr>                   <dbl>
-1  1960 NOR                   3581239
-2  1961 NOR                   3609800
-3  1962 NOR                   3638918
-4  1963 NOR                   3666537
-5  1964 NOR                   3694339
-6  1965 NOR                   3723168
+# A tibble: 6 x 4
+  species country_of_origin      color      sweetness
+  <chr>   <chr>                  <chr>          <dbl>
+1 Arabica Honduras               Green           0   
+2 Arabica Guatemala              Green           1.33
+3 Arabica United States (Hawaii) Green           6   
+4 Arabica Haiti                  Blue-Green      6   
+5 Arabica Nicaragua              Green           6   
+6 Arabica Brazil                 Blue-Green      6.67
 ```
 
 
 ```r
-nordic_data %>% 
-  select(year, Country_Code, Population_total) %>% 
-  arrange(desc(Population_total)) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, sweetness) %>% 
+  arrange(desc(sweetness)) %>% 
   head()
 ```
 
 ```
-# A tibble: 6 x 3
-   year Country_Code Population_total
-  <dbl> <chr>                   <dbl>
-1  2017 SWE                  10057698
-2  2016 SWE                   9923085
-3  2015 SWE                   9799186
-4  2014 SWE                   9696110
-5  2013 SWE                   9600379
-6  2012 SWE                   9519374
+# A tibble: 6 x 4
+  species country_of_origin color        sweetness
+  <chr>   <chr>             <chr>            <dbl>
+1 Arabica Ethiopia          Green               10
+2 Arabica Ethiopia          Green               10
+3 Arabica Guatemala         <NA>                10
+4 Arabica Ethiopia          Green               10
+5 Arabica Ethiopia          Green               10
+6 Arabica Brazil            Bluish-Green        10
 ```
 
 
@@ -300,21 +299,18 @@ We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find ou
 
 
 ```r
-nordic_data %>% 
-  group_by(year) %>% 
-  summarise(avg_population = mean(Population_female_of_total_)) %>%
-  head(5)
+coffee_ratings %>%
+  group_by(species) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))
 ```
 
 ```
-# A tibble: 5 x 2
-   year avg_population
-  <dbl>          <dbl>
-1  1960           50.6
-2  1961           50.6
-3  1962           50.6
-4  1963           50.6
-5  1964           50.6
+# A tibble: 2 x 3
+  species avg_rating proportion
+  <chr>        <dbl>      <dbl>
+1 Arabica       82.1     0.979 
+2 Robusta       80.9     0.0209
 ```
 
 ========================================================
@@ -322,34 +318,39 @@ nordic_data %>%
 
 
 ```r
-nordic_data %>% 
-  group_by(year, Country_Name) %>% 
-  summarise(median_gdp_per_capita = median(GDP_per_capita_Current_US_, na.rm = TRUE)) %>%
-  head(5)
+coffee_ratings %>%
+  group_by(country_of_origin) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            median_rating = median(total_cup_points)
+            )
 ```
 
 ```
-# A tibble: 5 x 3
-# Groups:   year [2]
-   year Country_Name median_gdp_per_capita
-  <dbl> <chr>                        <dbl>
-1  1960 Denmark                      1365.
-2  1960 Finland                      1179.
-3  1960 Norway                       1442.
-4  1960 Sweden                       1983.
-5  1961 Denmark                      1504.
+# A tibble: 37 x 3
+   country_of_origin avg_rating median_rating
+   <chr>                  <dbl>         <dbl>
+ 1 Brazil                  82.4          82.4
+ 2 Burundi                 81.8          81.8
+ 3 China                   82.9          83.2
+ 4 Colombia                83.1          83.2
+ 5 Costa Rica              82.8          83.2
+ 6 Cote d?Ivoire           79.3          79.3
+ 7 Ecuador                 80.2          78.8
+ 8 El Salvador             83.1          82.8
+ 9 Ethiopia                85.5          85.2
+10 Guatemala               81.8          82.5
+# … with 27 more rows
 ```
 
 
 ========================================================
 ## *Mutate:* We need a new column!
-Mutate helps us to create a new column
+Mutate helps us to create a new column by using othe
 
 ```r
-nordic_data %>% 
-
-  mutate(life_exp_ratio = Life_expectancy_at_birth_male_years_/
-           Life_expectancy_at_birth_female_years_)
+coffee_ratings %>% 
+  select(species, country_of_origin, processing_method) %>% 
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))
 ```
 
 
@@ -360,34 +361,48 @@ Can we find the true order of that code piece?
 
 
 ```r
- 1- summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) 
- 2- arrange(Life_expectancy)
- 3- select(year, Country_Name, Life_expectancy_at_birth_female_years_)
- 4- nordic_data
- 5- filter(year >= 2000)
+1- filter(species == "Arabica")  
+2- filter(!is.na(country_of_origin)) 
+3- select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste)
+4- coffee_ratings
+5- arrange(mean_aroma) 
+6- summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste))
+7- group_by(country_of_origin)
 ```
 
-Here is the solution
+Here is the solution:
 ========================================================
 
 
 ```r
-nordic_data %>% 
-  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>%
-  filter(year >= 2000) %>% 
-  group_by(Country_Name) %>% 
-  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) %>%
-  arrange(Life_expectancy)
+coffee_ratings %>% 
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
+  filter(species == "Arabica") %>% 
+  filter(!is.na(country_of_origin)) %>% 
+  group_by(country_of_origin) %>% 
+  summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste)) %>%
+  arrange(mean_aroma) 
 ```
 
 ```
-# A tibble: 4 x 2
-  Country_Name Life_expectancy
-  <chr>                  <dbl>
-1 Denmark                 82.9
-2 Norway                  84.2
-3 Sweden                  84.2
-4 Finland                 84.4
+# A tibble: 36 x 4
+   country_of_origin mean_aroma mean_flavor mean_aftertaste
+   <chr>                  <dbl>       <dbl>           <dbl>
+ 1 Haiti                   7.15        7.00            7.11
+ 2 Mauritius               7.25        7.25            7.17
+ 3 Honduras                7.29        7.23            7.06
+ 4 Myanmar                 7.30        7.33            7.12
+ 5 Nicaragua               7.33        7.32            7.20
+ 6 Philippines             7.36        7.23            7.30
+ 7 Burundi                 7.42        7.46            7.25
+ 8 Cote d?Ivoire           7.42        7.25            6.83
+ 9 Mexico                  7.46        7.38            7.23
+10 Vietnam                 7.48        7.48            7.30
+# … with 26 more rows
 ```
 
 
@@ -395,7 +410,9 @@ Good job!
 ========================================================
 Thank you for joining the training! 
 
-You can find lesson materials in here: 
+You can find the all lesson materials my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
+
+Any questions? I'd be happy to answer! 
 
 
 

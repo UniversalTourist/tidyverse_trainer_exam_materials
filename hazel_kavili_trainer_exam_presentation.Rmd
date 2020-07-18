@@ -2,7 +2,7 @@
 title: "Week 1: Intro to dplyr"
 author: "Hazel KAVILI"
 date: "`r Sys.Date()`"
-output: ioslides_presentation
+output: html_document
 ---
 
 ```{r setup, include=FALSE}

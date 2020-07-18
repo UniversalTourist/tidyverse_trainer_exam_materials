@@ -1,4 +1,4 @@
-Week 1: Intro to dplyr
+Week 1: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
 date: "`r Sys.Date()`"
@@ -6,33 +6,35 @@ autosize: true
 
 Install Libraries
 ========================================================
+We'll load the packages with `library(tidyverse)` instead of loading the core packages. Today we'll focus on `dplyr` (and one function from `readr` package for one-time).
 
-```{r, warning=FALSE, message=FALSE, echo=TRUE}
-#find mine's blog post where explain why directly load tidyverse instead of dplyr
+```{r}
+#install.packages("tidyverse")
 library(tidyverse)
 ```
 
 Load Data Into R
 ========================================================
+We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
 
 ```{r, warning=FALSE, message=FALSE, echo=TRUE}
-##don't forget to add the link data to read from csv and mention that you can read it from web or from your pc
-nordic_data <- read_csv("nordic_data.csv")
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 ```
 
-Summary of data - 1
+First Glimpse to Data 
 ========================================================
-
-There are some functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`:
+Let's take a look at the data set with `glimpse` function.
 
 ```{r, warning=FALSE, message=FALSE}
-glimpse(nordic_data)
+glimpse(coffee_ratings)
 ```
 
-Summary of data - 2
+Summary of Data 
 ========================================================
+There are some other functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`
+
 ```{r, warning=FALSE, message=FALSE}
-head(nordic_data)
+head(coffee_ratings, n = 3)
 ```
 
 
@@ -40,13 +42,13 @@ Comparison with base R and Tidyverse
 ========================================================
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 
-nordic_data[ , c('year', 'Country_Code')]
+coffee_ratings[ , c('species', 'country_of_origin')]
 
 ```
 
 ```{r warning=FALSE, message=FALSE, eval = FALSE}
-nordic_data %>% 
-  select(year, Country_Code)
+coffee_ratings %>% 
+  select(species, country_of_origin)
 
 ```
 
@@ -55,9 +57,10 @@ nordic_data %>%
 ## Did you see *Pipes*? *( %>% )*
 
 ```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
-nordic_data %>% 
-  group_by(Country_Name) %>%
-  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = TRUE))
+coffee_ratings %>%
+  group_by(species) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))
 ```
 
 
@@ -66,8 +69,8 @@ nordic_data %>%
 ## *Select:* Choosing is not losing!
 
 ```{r, warning=FALSE, message=FALSE}
-nordic_data %>% 
-  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, certification_body) %>% 
   head()
 ```
 
@@ -76,8 +79,8 @@ nordic_data %>%
 ## *Select:* we can use the column index to choose variables
 
 ```{r, warning=FALSE, message=FALSE}
-nordic_data %>% 
-  select(1:2, 34:36) %>% 
+coffee_ratings %>% 
+  select(1:4, 21:34) %>% 
   head()
 ```
 
@@ -85,20 +88,21 @@ nordic_data %>%
 ## *Filter:* Do we want everything?
 
 ```{r, warning=FALSE, message=FALSE}
-nordic_data %>% 
-  select(year, Country_Name, Population_ages_15_64_female, Population_ages_15_64_total, Population_ages_15_64_male) %>%
-  filter(year == 1960)
+coffee_ratings %>% 
+  filter(country_of_origin == "Ethiopia") %>% 
+  head(n = 3)
 ```
 
 How should we fill the blank areas?
 ========================================================
-We need to *select* year, Country_Name, Population_female_of_total_ and the *filter* Country_Name for only Finland and year higher than 1965, then look at the first 10 rows.
+We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
+
 ```{r, eval=FALSE, echo = TRUE}
 
-nordic data %>% 
-  ____(__:__, Population_female_of_total_) %>% 
-  ____(____ == "Finland") %>%
-  ____(year >= ___) %>% 
+coffee_ratings data %>% 
+  ____(_:_, number_of_bags) %>% 
+  ____(____ == "Brazil") %>%
+  ____(total_cup_points > ___) %>% 
   head(n = __)
   
 
@@ -108,26 +112,26 @@ Here is the solution:
 ========================================================
 
 ```{r, eval=TRUE, echo = TRUE}
-nordic_data %>% 
- select(1:2, Population_female_of_total_)  %>% 
-  filter(Country_Name == "Finland") %>% 
-  filter(year >= 1965) %>% 
-  head(n = 10)
+coffee_ratings %>% 
+  select(1:4, number_of_bags) %>% 
+  filter(country_of_origin == "Brazil") %>%
+  filter(total_cup_points > 70) %>% 
+  head(n = 3)
 ```
 
 ========================================================
 ## *Arrange:*  Let's order the rows
 ```{r}
-nordic_data %>% 
-  select(year, Country_Code, Population_total) %>% 
-  arrange(Population_total) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, sweetness) %>% 
+  arrange(sweetness) %>% 
   head()
 ```
 
 ```{r}
-nordic_data %>% 
-  select(year, Country_Code, Population_total) %>% 
-  arrange(desc(Population_total)) %>% 
+coffee_ratings %>% 
+  select(species, country_of_origin, color, sweetness) %>% 
+  arrange(desc(sweetness)) %>% 
   head()
 ```
 
@@ -138,32 +142,31 @@ Group by help us to find ...
 We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics.
 
 ```{r, eval=TRUE, echo = TRUE}
-nordic_data %>% 
-  group_by(year) %>% 
-  summarise(avg_population = mean(Population_female_of_total_)) %>%
-  head(5)
+coffee_ratings %>%
+  group_by(species) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))
 ```
 
 ========================================================
 ## *Group_by & Summarise:* Let's create associations among groups!
 
 ```{r, eval=TRUE, echo = TRUE}
-nordic_data %>% 
-  group_by(year, Country_Name) %>% 
-  summarise(median_gdp_per_capita = median(GDP_per_capita_Current_US_, na.rm = TRUE)) %>%
-  head(5)
+coffee_ratings %>%
+  group_by(country_of_origin) %>%
+  summarise(avg_rating = mean(total_cup_points),
+            median_rating = median(total_cup_points)
+            )
 ```
 
 
 ========================================================
 ## *Mutate:* We need a new column!
-Mutate helps us to create a new column
+Mutate helps us to create a new column by using othe
 ```{r, eval=FALSE, echo = TRUE}
-
-nordic_data %>% 
-
-  mutate(life_exp_ratio = Life_expectancy_at_birth_male_years_/
-           Life_expectancy_at_birth_female_years_)
+coffee_ratings %>% 
+  select(species, country_of_origin, processing_method) %>% 
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))
     
 ```
 
@@ -174,24 +177,31 @@ Let's put it all together!
 Can we find the true order of that code piece?
 
 ```{r, eval = FALSE, echo = TRUE}
- 1- summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) 
- 2- arrange(Life_expectancy)
- 3- select(year, Country_Name, Life_expectancy_at_birth_female_years_)
- 4- nordic_data
- 5- filter(year >= 2000)
+1- filter(species == "Arabica")  
+2- filter(!is.na(country_of_origin)) 
+3- select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste)
+4- coffee_ratings
+5- arrange(mean_aroma) 
+6- summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste))
+7- group_by(country_of_origin)
 
 ```
 
-Here is the solution
+Here is the solution:
 ========================================================
 
 ```{r}
-nordic_data %>% 
-  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>%
-  filter(year >= 2000) %>% 
-  group_by(Country_Name) %>% 
-  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) %>%
-  arrange(Life_expectancy)
+coffee_ratings %>% 
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
+  filter(species == "Arabica") %>% 
+  filter(!is.na(country_of_origin)) %>% 
+  group_by(country_of_origin) %>% 
+  summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste)) %>%
+  arrange(mean_aroma) 
 
 ```
 
@@ -200,7 +210,9 @@ Good job!
 ========================================================
 Thank you for joining the training! 
 
-You can find lesson materials in here: 
+You can find the all lesson materials my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
+
+Any questions? I'd be happy to answer! 
 
 
 
