@@ -20,7 +20,7 @@ Load Data Into R
 nordic_data <- read_csv("nordic_data.csv")
 ```
 
-Summary of data
+Summary of data - 1
 ========================================================
 
 There are some functions to check your data: `str`, `summary`, `glimpse` , `head`, `tail`:
@@ -29,22 +29,35 @@ There are some functions to check your data: `str`, `summary`, `glimpse` , `head
 glimpse(nordic_data)
 ```
 
+Summary of data - 2
+========================================================
+```{r, warning=FALSE, message=FALSE}
+head(nordic_data)
+```
+
 
 Comparison with base R and Tidyverse
 ========================================================
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, eval = FALSE}
+
+nordic_data[ , c('year', 'Country_Code')]
 
 ```
 
+```{r warning=FALSE, message=FALSE, eval = FALSE}
+nordic_data %>% 
+  select(year, Country_Code)
+
+```
 
 
 ========================================================
 ## Did you see *Pipes*? *( %>% )*
 
-```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE }
+```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
 nordic_data %>% 
-  select(Country_Name, Fertility_rate_total_births_per_woman_, year) %>% 
-  filter( year == 1960) 
+  group_by(Country_Name) %>%
+  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = TRUE))
 ```
 
 
@@ -53,47 +66,119 @@ nordic_data %>%
 ## *Select:* Choosing is not losing!
 
 ```{r, warning=FALSE, message=FALSE}
-
+nordic_data %>% 
+  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>% 
+  head()
 ```
 
+
+========================================================
+## *Select:* we can use the column index to choose variables
+
+```{r, warning=FALSE, message=FALSE}
+nordic_data %>% 
+  select(1:2, 34:36) %>% 
+  head()
+```
 
 ========================================================
 ## *Filter:* Do we want everything?
 
 ```{r, warning=FALSE, message=FALSE}
-
+nordic_data %>% 
+  select(year, Country_Name, Population_ages_15_64_female, Population_ages_15_64_total, Population_ages_15_64_male) %>%
+  filter(year == 1960)
 ```
 
 How should we fill the blank areas?
 ========================================================
+We need to *select* year, Country_Name, Population_female_of_total_ and the *filter* Country_Name for only Finland and year higher than 1965, then look at the first 10 rows.
+```{r, eval=FALSE, echo = TRUE}
 
-```{r, eval=FALSE}
+nordic data %>% 
+  ____(__:__, Population_female_of_total_) %>% 
+  ____(____ == "Finland") %>%
+  ____(year >= ___) %>% 
+  head(n = __)
+  
 
 ```
 
 Here is the solution:
 ========================================================
 
-```{r}
+```{r, eval=TRUE, echo = TRUE}
+nordic_data %>% 
+ select(1:2, Population_female_of_total_)  %>% 
+  filter(Country_Name == "Finland") %>% 
+  filter(year >= 1965) %>% 
+  head(n = 10)
 ```
-
-
-========================================================
-## *Mutate:* I need a new column!
-
-
-
 
 ========================================================
 ## *Arrange:*  Let's order the rows
 ```{r}
-
+nordic_data %>% 
+  select(year, Country_Code, Population_total) %>% 
+  arrange(Population_total) %>% 
+  head()
 ```
+
+```{r}
+nordic_data %>% 
+  select(year, Country_Code, Population_total) %>% 
+  arrange(desc(Population_total)) %>% 
+  head()
+```
+
+
+========================================================
+## *Group_by & Summarise:* Let's create associations among groups!
+Group by help us to find ...
+We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics.
+
+```{r, eval=TRUE, echo = TRUE}
+nordic_data %>% 
+  group_by(year) %>% 
+  summarise(avg_population = mean(Population_female_of_total_)) %>%
+  head(5)
+```
+
+========================================================
+## *Group_by & Summarise:* Let's create associations among groups!
+
+```{r, eval=TRUE, echo = TRUE}
+nordic_data %>% 
+  group_by(year, Country_Name) %>% 
+  summarise(median_gdp_per_capita = median(GDP_per_capita_Current_US_, na.rm = TRUE)) %>%
+  head(5)
+```
+
+
+========================================================
+## *Mutate:* We need a new column!
+Mutate helps us to create a new column
+```{r, eval=FALSE, echo = TRUE}
+
+nordic_data %>% 
+
+  mutate(life_exp_ratio = Life_expectancy_at_birth_male_years_/
+           Life_expectancy_at_birth_female_years_)
+    
+```
+
+
 
 Let's put it all together!
 ========================================================
+Can we find the true order of that code piece?
 
-```{r}
+```{r, eval = FALSE, echo = TRUE}
+ 1- summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) 
+ 2- arrange(Life_expectancy)
+ 3- select(year, Country_Name, Life_expectancy_at_birth_female_years_)
+ 4- nordic_data
+ 5- filter(year >= 2000)
 
 ```
 
@@ -101,6 +186,13 @@ Here is the solution
 ========================================================
 
 ```{r}
+nordic_data %>% 
+  select(year, Country_Name, Life_expectancy_at_birth_female_years_) %>%
+  filter(year >= 2000) %>% 
+  group_by(Country_Name) %>% 
+  summarise(Life_expectancy = max(Life_expectancy_at_birth_female_years_, na.rm = T)) %>%
+  arrange(Life_expectancy)
+
 ```
 
 

@@ -9,3 +9,6 @@ nordic_data %>%
   select(Country_Name, Fertility_rate_total_births_per_woman_, year) %>% 
   filter( year == 1960) 
 
+
+##
+
