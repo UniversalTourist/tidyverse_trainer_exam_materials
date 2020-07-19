@@ -49,7 +49,6 @@ coffee_ratings[ , c('species', 'country_of_origin')]
 ```{r warning=FALSE, message=FALSE, eval = FALSE}
 coffee_ratings %>% 
   select(species, country_of_origin)
-
 ```
 
 
@@ -79,13 +78,21 @@ coffee_ratings %>%
 ## *Select:* we can use the column index to choose variables
 
 ```{r, warning=FALSE, message=FALSE}
-coffee_ratings %>% 
-  select(1:4, 21:34) %>% 
+ select(coffee_ratings, 1:4, 21:34) %>% 
   head()
+```
+
+
+========================================================
+Most of the dplyr verbs have that structure:
+```{r, eval=FALSE, echo=TRUE}
+1- dplyr_verb(data_frame, colum_name, some_other_arguments)
+2- data_frame %>% dplyr_verb(column_name, some_other_arguments)
 ```
 
 ========================================================
 ## *Filter:* Do we want everything?
+Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
 ```{r, warning=FALSE, message=FALSE}
 coffee_ratings %>% 
@@ -95,6 +102,7 @@ coffee_ratings %>%
 
 How should we fill the blank areas?
 ========================================================
+Now it's time for a quick question. 
 We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
 
 ```{r, eval=FALSE, echo = TRUE}
@@ -120,14 +128,19 @@ coffee_ratings %>%
 ```
 
 ========================================================
-## *Arrange:*  Let's order the rows
+## *Arrange:*  Let's bring some order to data!
+
+`arrange` sorts a data frame by one or more columns. Let's say we want to look at our data frame arranged by `sweetness`. In default, your dataset will be arranged bu ascending order.
+
 ```{r}
 coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
   arrange(sweetness) %>% 
   head()
 ```
 
+========================================================
+## *Arrange:*  Let's bring some order to data!
+If we want to order it by descending order of sweetness, we can use this syntax.
 ```{r}
 coffee_ratings %>% 
   select(species, country_of_origin, color, sweetness) %>% 
@@ -138,8 +151,10 @@ coffee_ratings %>%
 
 ========================================================
 ## *Group_by & Summarise:* Let's create associations among groups!
-Group by help us to find ...
-We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics.
+We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is).
+`group_by` gives the data frame a grouping using one or more columns, which modifies the subsequent call to `summarize`. 
+
+We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics inside of `summarize` function.
 
 ```{r, eval=TRUE, echo = TRUE}
 coffee_ratings %>%
@@ -162,7 +177,11 @@ coffee_ratings %>%
 
 ========================================================
 ## *Mutate:* We need a new column!
-Mutate helps us to create a new column by using othe
+`mutate` lets us add or overwrite columns by computing a new value for them.
+For example, in the code below, we want a column name `is_processing_method_full` which is filled by checking if `processing_method` have some value or not. If it is not NA, we'll write 1, otherwise 0. 
+
+We didn't have `is_processing_method_full` before but we create it by using `processing_method` variable.
+
 ```{r, eval=FALSE, echo = TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin, processing_method) %>% 
@@ -174,7 +193,9 @@ coffee_ratings %>%
 
 Let's put it all together!
 ========================================================
+We want to look at the mean of aroma, flavor and aftertast variables by countries.
 Can we find the true order of that code piece?
+
 
 ```{r, eval = FALSE, echo = TRUE}
 1- filter(species == "Arabica")  

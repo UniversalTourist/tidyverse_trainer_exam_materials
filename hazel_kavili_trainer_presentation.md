@@ -1,7 +1,7 @@
 Week 1: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
-date: "2020-07-18"
+date: "2020-07-19"
 autosize: true
 
 Install Libraries
@@ -165,8 +165,7 @@ coffee_ratings %>%
 
 
 ```r
-coffee_ratings %>% 
-  select(1:4, 21:34) %>% 
+ select(coffee_ratings, 1:4, 21:34) %>% 
   head()
 ```
 
@@ -185,8 +184,18 @@ coffee_ratings %>%
 #   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>
 ```
 
+
+========================================================
+Most of the dplyr verbs have that structure:
+
+```r
+1- dplyr_verb(data_frame, colum_name, some_other_arguments)
+2- data_frame %>% dplyr_verb(column_name, some_other_arguments)
+```
+
 ========================================================
 ## *Filter:* Do we want everything?
+Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
 
 ```r
@@ -217,6 +226,7 @@ coffee_ratings %>%
 
 How should we fill the blank areas?
 ========================================================
+Now it's time for a quick question. 
 We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
 
 
@@ -250,27 +260,43 @@ coffee_ratings %>%
 ```
 
 ========================================================
-## *Arrange:*  Let's order the rows
+## *Arrange:*  Let's bring some order to data!
+
+`arrange` sorts a data frame by one or more columns. Let's say we want to look at our data frame arranged by `sweetness`. In default, your dataset will be arranged bu ascending order.
+
 
 ```r
 coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
   arrange(sweetness) %>% 
   head()
 ```
 
 ```
-# A tibble: 6 x 4
-  species country_of_origin      color      sweetness
-  <chr>   <chr>                  <chr>          <dbl>
-1 Arabica Honduras               Green           0   
-2 Arabica Guatemala              Green           1.33
-3 Arabica United States (Hawaii) Green           6   
-4 Arabica Haiti                  Blue-Green      6   
-5 Arabica Nicaragua              Green           6   
-6 Arabica Brazil                 Blue-Green      6.67
+# A tibble: 6 x 43
+  total_cup_points species owner country_of_orig… farm_name lot_number mill 
+             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+1              0   Arabica bism… Honduras         los hica… 103        cigr…
+2             59.8 Arabica juan… Guatemala        finca el… <NA>       bene…
+3             77.6 Arabica kona… United States (… <NA>      <NA>       <NA> 
+4             67.9 Arabica myri… Haiti            200 farms <NA>       coeb…
+5             63.1 Arabica expo… Nicaragua        finca la… 017-053-0… bene…
+6             82.3 Arabica ipan… Brazil           rio verde <NA>       ipan…
+# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
+#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
+#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
+#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
+#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
+#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
+#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
+#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
+#   certification_address <chr>, certification_contact <chr>,
+#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
+#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
 ```
 
+========================================================
+## *Arrange:*  Let's bring some order to data!
+If we want to order it by descending order of sweetness, we can use this syntax.
 
 ```r
 coffee_ratings %>% 
@@ -294,8 +320,10 @@ coffee_ratings %>%
 
 ========================================================
 ## *Group_by & Summarise:* Let's create associations among groups!
-Group by help us to find ...
-We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics.
+We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is).
+`group_by` gives the data frame a grouping using one or more columns, which modifies the subsequent call to `summarize`. 
+
+We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics inside of `summarize` function.
 
 
 ```r
@@ -345,7 +373,11 @@ coffee_ratings %>%
 
 ========================================================
 ## *Mutate:* We need a new column!
-Mutate helps us to create a new column by using othe
+`mutate` lets us add or overwrite columns by computing a new value for them.
+For example, in the code below, we want a column name `is_processing_method_full` which is filled by checking if `processing_method` have some value or not. If it is not NA, we'll write 1, otherwise 0. 
+
+We didn't have `is_processing_method_full` before but we create it by using `processing_method` variable.
+
 
 ```r
 coffee_ratings %>% 
@@ -357,7 +389,9 @@ coffee_ratings %>%
 
 Let's put it all together!
 ========================================================
+We want to look at the mean of aroma, flavor and aftertast variables by countries.
 Can we find the true order of that code piece?
+
 
 
 ```r

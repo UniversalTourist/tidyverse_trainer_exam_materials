@@ -27,8 +27,7 @@ coffee_ratings %>%
   select(species, country_of_origin, color, certification_body) %>% 
   head()
 
-coffee_ratings %>% 
-  select(1:4, 21:34) %>% 
+select(coffee_ratings, 1:4, 21:34) %>% 
   head()
 
 ##Filter
@@ -46,7 +45,6 @@ coffee_ratings %>%
 
 ## Arrange
 coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
   arrange(sweetness) %>% 
   head()
 
