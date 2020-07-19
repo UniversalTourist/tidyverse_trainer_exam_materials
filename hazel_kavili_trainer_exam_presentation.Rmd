@@ -1,5 +1,5 @@
 ---
-title: "Week 1: Intro to dplyr"
+title: "Week 2: Intro to Data Wrangling with dplyr"
 author: "Hazel KAVILI"
 date: "`r Sys.Date()`"
 output: html_document
@@ -18,7 +18,7 @@ library(tidyverse)
 ```
 
 ## Load Data Into R
-Next wthing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
+Next thing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
 
 We'll use `read_csv` function from readr package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
 
@@ -42,7 +42,7 @@ head(coffee_ratings, n = 3)
 There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
 ## Comparison with base R and Tidyverse
-Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse. 
+Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
 The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive? 
 
 ```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
@@ -58,15 +58,25 @@ coffee_ratings %>%
 ## Did you see *Pipes*? *( %>% )*
 Did you see that ( %>% ) sign in the previous code piece? 
 It is called Pipe and it helps us to connect our dplyr verbs. We'll use it a lot during our session! 
-Let's try to read our code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by `species` variable and then I summarise it with two statistics. One is mean of a variable and the other is some proportion. 
+Let's try to read the code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by `species` variable and then I summarise into two statistics. One is mean of a variable and the other is some proportion. 
 
-What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
+What I see in here is that everything is chained. I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
 
 ```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
 coffee_ratings %>%
   group_by(species) %>%
   summarise(avg_rating = mean(total_cup_points),
             proportion = n()/nrow(coffee_ratings))
+```
+
+## Structure of functions
+Most of the dplyr verbs have that structure:
+```{r, eval=FALSE, echo=TRUE}
+1- dplyr_verb(data_frame, colum_name, some_other_arguments)
+
+2- data_frame %>% 
+    dplyr_verb(column_name, some_other_arguments) %>% 
+    dplyr_verb(column_name, some_other_arguments)
 ```
 
 ## *Select:* Choosing is not losing!
@@ -83,12 +93,6 @@ coffee_ratings %>%
   head()
 ```
 
-Most of the dplyr verbs have that structure:
-```{r, eval=FALSE, echo=TRUE}
-1- dplyr_verb(data_frame, colum_name, some_other_arguments)
-2- data_frame %>% dplyr_verb(column_name, some_other_arguments)
-```
-
 
 ## *Filter:* Do we want everything?
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
@@ -101,7 +105,7 @@ coffee_ratings %>%
 
 ## How should we fill the blank areas?
 Now it's time for a quick question. 
-We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
+We need to *select* **total_cup_points, species, owner, countyr_of_origin and number_of_bags**. Then *filter* **country of origin for only Brazil** and **total cup points is higher than 70**, then look at the *first 3 rows* of data set.
 
 ```{r, eval=FALSE, echo = TRUE}
 
@@ -173,7 +177,8 @@ We didn't have `is_processing_method_full` before but we create it by using `pro
 ```{r, eval=TRUE, echo = TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin, processing_method) %>% 
-  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) %>% 
+  head(n=3)
     
 ```
 
@@ -197,7 +202,7 @@ Can we find the true order of that code piece?
 
 
 ## Here is the solution:
-```{r, eval = TRUE, echo = TRUE}
+```{r, eval = TRUE, echo = TRUE, warning=FALSE, message=FALSE}
 coffee_ratings %>% 
   select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
   filter(species == "Arabica") %>% 

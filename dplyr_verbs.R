@@ -7,6 +7,8 @@ coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatasci
 ## First Glimpse
 glimpse(coffee_ratings)
 
+View(coffee_ratings)
+
 head(coffee_ratings, n = 3)
 
 ## Comparison with base R and Tidyverse
