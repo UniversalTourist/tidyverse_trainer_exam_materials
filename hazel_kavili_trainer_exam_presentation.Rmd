@@ -30,7 +30,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 Let's look at our data frame to get to know it.
 There are some functions to check the structure and summary of the data: `str`, `summary`, `glimpse` are the most common ones.
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
 glimpse(coffee_ratings)
 ```
 
@@ -45,11 +45,11 @@ There are 43 variables (columns) and 1339 rows in our data frame. There is data 
 Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse. 
 The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive? 
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
 coffee_ratings[ , c('species', 'country_of_origin')]
 ```
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin)
 ```
@@ -62,7 +62,7 @@ Let's try to read our code below: I have the dataframe called coffee_ratings, I 
 
 What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
 
-```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE }
+```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
 coffee_ratings %>%
   group_by(species) %>%
   summarise(avg_rating = mean(total_cup_points),
@@ -72,7 +72,7 @@ coffee_ratings %>%
 ## *Select:* Choosing is not losing!
 Now we are moving to our first verb. `select` helps us select the variables we want to use or we need for our analysis. We probably don't need all 43 variables to answer some questions.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin, color, certification_body) %>% 
   head()
@@ -93,7 +93,7 @@ Most of the dplyr verbs have that structure:
 ## *Filter:* Do we want everything?
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
 coffee_ratings %>% 
   filter(country_of_origin == "Ethiopia") %>% 
   head(n = 3)
@@ -126,14 +126,14 @@ coffee_ratings %>%
 ## *Arrange:*  Let's bring some order to data!
 `arrange` sorts a data frame by one or more columns. Let's say we want to look at our data frame arranged by `sweetness`. In default, your dataset will be arranged bu ascending order.
 
-```{r}
+```{r, eval=TRUE, echo=TRUE}
 coffee_ratings %>% 
   arrange(sweetness) %>% 
   head()
 ```
 
 If we want to order it by descending order of sweetness, we can use this syntax.
-```{r}
+```{r, eval=TRUE, echo=TRUE}
 coffee_ratings %>% 
   select(total_cup_points, species, country_of_origin, color, sweetness) %>% 
   arrange(desc(sweetness)) %>% 
@@ -170,7 +170,7 @@ For example, in the code below, we want a column name `is_processing_method_full
 
 We didn't have `is_processing_method_full` before but we create it by using `processing_method` variable.
 
-```{r, eval=FALSE, echo = TRUE}
+```{r, eval=TRUE, echo = TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin, processing_method) %>% 
   mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))
@@ -197,7 +197,7 @@ Can we find the true order of that code piece?
 
 
 ## Here is the solution:
-```{r}
+```{r, eval = TRUE, echo = TRUE}
 coffee_ratings %>% 
   select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
   filter(species == "Arabica") %>% 

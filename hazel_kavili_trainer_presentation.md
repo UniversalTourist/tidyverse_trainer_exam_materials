@@ -16,7 +16,9 @@ library(tidyverse)
 
 Load Data Into R
 ========================================================
-We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
+Next wthing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
+
+We'll use `read_csv` function from readr package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
 
 
 ```r
@@ -25,7 +27,8 @@ coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatasci
 
 First Glimpse to Data 
 ========================================================
-Let's take a look at the data set with `glimpse` function.
+Let's look at our data frame to get to know it.
+There are some functions to check the structure and summary of the data: `str`, `summary`, `glimpse` are the most common ones.
 
 
 ```r
@@ -89,29 +92,13 @@ There are some other functions to check your data: `str`, `summary`, `glimpse` ,
 head(coffee_ratings, n = 3)
 ```
 
-```
-# A tibble: 3 x 43
-  total_cup_points species owner country_of_orig… farm_name lot_number mill 
-             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
-1             90.6 Arabica meta… Ethiopia         "metad p… <NA>       meta…
-2             89.9 Arabica meta… Ethiopia         "metad p… <NA>       meta…
-3             89.8 Arabica grou… Guatemala        "san mar… <NA>       <NA> 
-# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
-#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
-#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
-#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
-#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
-#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
-#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
-#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
-#   certification_address <chr>, certification_contact <chr>,
-#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
-#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
-```
-
+There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
 Comparison with base R and Tidyverse
 ========================================================
+Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse. 
+The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive? 
+
 
 ```r
 coffee_ratings[ , c('species', 'country_of_origin')]
@@ -127,6 +114,12 @@ coffee_ratings %>%
 ========================================================
 ## Did you see *Pipes*? *( %>% )*
 
+Did you see that ( %>% ) sign in the previous code piece? 
+It is called Pipe and it helps us to connect our dplyr verbs. We'll use it a lot during our session! 
+Let's try to read our code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by `species` variable and then I summarise it with two statistics. One is mean of a variable and the other is some proportion. 
+
+What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
+
 
 ```r
 coffee_ratings %>%
@@ -139,6 +132,8 @@ coffee_ratings %>%
 
 ========================================================
 ## *Select:* Choosing is not losing!
+
+Now we are moving to our first verb. `select` helps us select the variables we want to use or we need for our analysis. We probably don't need all 43 variables to answer some questions.
 
 
 ```r

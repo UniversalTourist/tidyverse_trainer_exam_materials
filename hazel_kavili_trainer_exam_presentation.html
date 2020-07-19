@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hazel KAVILI" />
 
-<meta name="date" content="2020-07-18" />
+<meta name="date" content="2020-07-19" />
 
 <title>Week 1: Intro to dplyr</title>
 
@@ -365,100 +365,282 @@ summary {
 
 <h1 class="title toc-ignore">Week 1: Intro to dplyr</h1>
 <h4 class="author">Hazel KAVILI</h4>
-<h4 class="date">2020-07-18</h4>
+<h4 class="date">2020-07-19</h4>
 
 </div>
 
 
 <div id="install-libraries" class="section level2">
 <h2>Install Libraries</h2>
-<pre class="r"><code>#find mine's blog post where explain why directly load tidyverse instead of dplyr
-library(tidyverse)</code></pre>
+<p>We’ll load the packages with <code>library(tidyverse)</code> instead of loading the core packages one by one. Today we’ll focus on <code>dplyr</code> (and one function from <code>readr</code> package for one-time).</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
 </div>
 <div id="load-data-into-r" class="section level2">
 <h2>Load Data Into R</h2>
-<pre class="r"><code>##don't forget to add the link data to read from csv and mention that you can read it from web or from your pc
-nordic_data &lt;- read_csv(&quot;nordic_data.csv&quot;)</code></pre>
+<p>Next wthing we’ll do is load the data into our R environment. We’ll use a data set about coffee ratings from weekly <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md">Tidy Tuesday challenge</a>.</p>
+<p>We’ll use <code>read_csv</code> function from readr package to get the data, and assign it to <code>coffee_ratings</code>. In the rest of the document, we’ll use that name to call our data frame.</p>
+<pre class="r"><code>coffee_ratings &lt;- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')</code></pre>
 </div>
 <div id="summary-of-data" class="section level2">
 <h2>Summary of data</h2>
-<p>There are some functions to check the summary of your data: <code>str</code>, <code>summary</code>, <code>glimpse</code></p>
-<pre><code>## Rows: 236
-## Columns: 37
-## $ year                                                         &lt;dbl&gt; 1960, 19…
-## $ Country_Name                                                 &lt;chr&gt; &quot;Denmark…
-## $ Country_Code                                                 &lt;chr&gt; &quot;DNK&quot;, &quot;…
-## $ Adolescent_fertility_rate_births_per_1_000_women_ages_15_19_ &lt;dbl&gt; 44.1754,…
-## $ Age_dependency_ratio_of_working_age_population_              &lt;dbl&gt; 55.78849…
-## $ Age_population_age_0_female_interpolated                     &lt;dbl&gt; 38797, 3…
-## $ Age_population_age_0_male_interpolated                       &lt;dbl&gt; 40519, 4…
-## $ Age_population_age_01_female_interpolated                    &lt;dbl&gt; 36505, 3…
-## $ Age_population_age_01_male_interpolated                      &lt;dbl&gt; 38452, 4…
-## $ Age_population_age_02_female_interpolated                    &lt;dbl&gt; 35003, 3…
-## $ Age_population_age_02_male_interpolated                      &lt;dbl&gt; 37117, 3…
-## $ Age_population_age_03_female_interpolated                    &lt;dbl&gt; 34189, 3…
-## $ Age_population_age_03_male_interpolated                      &lt;dbl&gt; 36418, 3…
-## $ Age_population_age_04_female_interpolated                    &lt;dbl&gt; 33961, 3…
-## $ Age_population_age_04_male_interpolated                      &lt;dbl&gt; 36259, 3…
-## $ Age_population_age_05_female_interpolated                    &lt;dbl&gt; 34218, 3…
-## $ Age_population_age_05_male_interpolated                      &lt;dbl&gt; 36545, 3…
-## $ Birth_rate_crude_per_1_000_people_                           &lt;dbl&gt; 16.6, 16…
-## $ Death_rate_crude_per_1_000_people_                           &lt;dbl&gt; 9.5, 9.4…
-## $ Fertility_rate_total_births_per_woman_                       &lt;dbl&gt; 2.57, 2.…
-## $ GDP_current_US_                                              &lt;dbl&gt; 62489468…
-## $ GDP_per_capita_Current_US_                                   &lt;dbl&gt; 1364.517…
-## $ Inflation_consumer_prices_annual_                            &lt;dbl&gt; 1.255230…
-## $ Life_expectancy_at_birth_female_years_                       &lt;dbl&gt; 74.00, 7…
-## $ Life_expectancy_at_birth_male_years_                         &lt;dbl&gt; 70.44, 7…
-## $ Population_ages_0_14_female                                  &lt;dbl&gt; 561643, …
-## $ Population_ages_0_14_of_total_                               &lt;dbl&gt; 25.20778…
-## $ Population_ages_15_64_female                                 &lt;dbl&gt; 1484063,…
-## $ Population_ages_15_64_male                                   &lt;dbl&gt; 1455561,…
-## $ Population_ages_15_64_of_total_                              &lt;dbl&gt; 64.18959…
-## $ Population_ages_15_64_total                                  &lt;dbl&gt; 2939628,…
-## $ Population_ages_65_and_above_female                          &lt;dbl&gt; 261702, …
-## $ Population_ages_65_and_above_of_total_                       &lt;dbl&gt; 10.60263…
-## $ Population_female                                            &lt;dbl&gt; 2307409,…
-## $ Population_female_of_total_                                  &lt;dbl&gt; 50.38448…
-## $ Population_total                                             &lt;dbl&gt; 4579603,…
-## $ GDP_growth_annual_                                           &lt;dbl&gt; NA, 6.37…</code></pre>
+<p>Let’s look at our data frame to get to know it. There are some functions to check the structure and summary of the data: <code>str</code>, <code>summary</code>, <code>glimpse</code> are the most common ones.</p>
+<pre class="r"><code>glimpse(coffee_ratings)</code></pre>
+<pre><code>## # A tibble: 3 x 43
+##   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
+## 1             90.6 Arabica meta… Ethiopia         &quot;metad p… &lt;NA&gt;       meta…
+## 2             89.9 Arabica meta… Ethiopia         &quot;metad p… &lt;NA&gt;       meta…
+## 3             89.8 Arabica grou… Guatemala        &quot;san mar… &lt;NA&gt;       &lt;NA&gt; 
+## # … with 36 more variables: ico_number &lt;chr&gt;, company &lt;chr&gt;, altitude &lt;chr&gt;,
+## #   region &lt;chr&gt;, producer &lt;chr&gt;, number_of_bags &lt;dbl&gt;, bag_weight &lt;chr&gt;,
+## #   in_country_partner &lt;chr&gt;, harvest_year &lt;chr&gt;, grading_date &lt;chr&gt;,
+## #   owner_1 &lt;chr&gt;, variety &lt;chr&gt;, processing_method &lt;chr&gt;, aroma &lt;dbl&gt;,
+## #   flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;, acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;,
+## #   uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;,
+## #   moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;,
+## #   category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;, certification_body &lt;chr&gt;,
+## #   certification_address &lt;chr&gt;, certification_contact &lt;chr&gt;,
+## #   unit_of_measurement &lt;chr&gt;, altitude_low_meters &lt;dbl&gt;,
+## #   altitude_high_meters &lt;dbl&gt;, altitude_mean_meters &lt;dbl&gt;</code></pre>
+<p>There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.</p>
 </div>
 <div id="comparison-with-base-r-and-tidyverse" class="section level2">
 <h2>Comparison with base R and Tidyverse</h2>
+<p>Before moving into dplyr verbs, I’d like to show you a comparison of base R and tidyverse. The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive?</p>
+<pre class="r"><code>coffee_ratings[ , c('species', 'country_of_origin')]</code></pre>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(species, country_of_origin)</code></pre>
 </div>
 <div id="did-you-see-pipes" class="section level2">
 <h2>Did you see <em>Pipes</em>? <em>( %&gt;% )</em></h2>
-<pre class="r"><code>nordic_data %&gt;% 
-  select(Country_Name, Fertility_rate_total_births_per_woman_, year) %&gt;% 
-  filter( year == 1960) </code></pre>
+<p>Did you see that ( %&gt;% ) sign in the previous code piece? It is called Pipe and it helps us to connect our dplyr verbs. We’ll use it a lot during our session! Let’s try to read our code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by <code>species</code> variable and then I summarise it with two statistics. One is mean of a variable and the other is some proportion.</p>
+<p>What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.</p>
+<pre class="r"><code>coffee_ratings %&gt;%
+  group_by(species) %&gt;%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))</code></pre>
 </div>
 <div id="select-choosing-is-not-losing" class="section level2">
 <h2><em>Select:</em> Choosing is not losing!</h2>
+<p>Now we are moving to our first verb. <code>select</code> helps us select the variables we want to use or we need for our analysis. We probably don’t need all 43 variables to answer some questions.</p>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(species, country_of_origin, color, certification_body) %&gt;% 
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   species country_of_origin color        certification_body                
+##   &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;        &lt;chr&gt;                             
+## 1 Arabica Ethiopia          Green        METAD Agricultural Development plc
+## 2 Arabica Ethiopia          Green        METAD Agricultural Development plc
+## 3 Arabica Guatemala         &lt;NA&gt;         Specialty Coffee Association      
+## 4 Arabica Ethiopia          Green        METAD Agricultural Development plc
+## 5 Arabica Ethiopia          Green        METAD Agricultural Development plc
+## 6 Arabica Brazil            Bluish-Green Specialty Coffee Institute of Asia</code></pre>
+<pre><code>## # A tibble: 6 x 18
+##   total_cup_points species owner country_of_orig… aroma flavor aftertaste
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1             90.6 Arabica meta… Ethiopia          8.67   8.83       8.67
+## 2             89.9 Arabica meta… Ethiopia          8.75   8.67       8.5 
+## 3             89.8 Arabica grou… Guatemala         8.42   8.5        8.42
+## 4             89   Arabica yidn… Ethiopia          8.17   8.58       8.42
+## 5             88.8 Arabica meta… Ethiopia          8.25   8.5        8.25
+## 6             88.8 Arabica ji-a… Brazil            8.58   8.42       8.42
+## # … with 11 more variables: acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;,
+## #   uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;,
+## #   moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;</code></pre>
+<p>Most of the dplyr verbs have that structure:</p>
+<pre class="r"><code>1- dplyr_verb(data_frame, colum_name, some_other_arguments)
+2- data_frame %&gt;% dplyr_verb(column_name, some_other_arguments)</code></pre>
 </div>
 <div id="filter-do-we-want-everything" class="section level2">
 <h2><em>Filter:</em> Do we want everything?</h2>
+<p>Let’s say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is <code>filter</code> our dataset by using necessary column and value:</p>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  filter(country_of_origin == &quot;Ethiopia&quot;) %&gt;% 
+  head(n = 3)</code></pre>
+<pre><code>## # A tibble: 3 x 43
+##   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
+## 1             90.6 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
+## 2             89.9 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
+## 3             89   Arabica yidn… Ethiopia         yidnekac… &lt;NA&gt;       wole…
+## # … with 36 more variables: ico_number &lt;chr&gt;, company &lt;chr&gt;, altitude &lt;chr&gt;,
+## #   region &lt;chr&gt;, producer &lt;chr&gt;, number_of_bags &lt;dbl&gt;, bag_weight &lt;chr&gt;,
+## #   in_country_partner &lt;chr&gt;, harvest_year &lt;chr&gt;, grading_date &lt;chr&gt;,
+## #   owner_1 &lt;chr&gt;, variety &lt;chr&gt;, processing_method &lt;chr&gt;, aroma &lt;dbl&gt;,
+## #   flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;, acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;,
+## #   uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;,
+## #   moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;,
+## #   category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;, certification_body &lt;chr&gt;,
+## #   certification_address &lt;chr&gt;, certification_contact &lt;chr&gt;,
+## #   unit_of_measurement &lt;chr&gt;, altitude_low_meters &lt;dbl&gt;,
+## #   altitude_high_meters &lt;dbl&gt;, altitude_mean_meters &lt;dbl&gt;</code></pre>
 </div>
 <div id="how-should-we-fill-the-blank-areas" class="section level2">
 <h2>How should we fill the blank areas?</h2>
+<p>Now it’s time for a quick question. We need to <em>select</em> total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then <em>filter</em> country of origin for only Brazil and total cup points is higher than 70, then look at the <em>first 3 rows</em> of data set.</p>
+<pre class="r"><code>coffee_ratings data %&gt;% 
+  ____(_:_, number_of_bags) %&gt;% 
+  ____(____ == &quot;Brazil&quot;) %&gt;%
+  ____(total_cup_points &gt; ___) %&gt;% 
+  head(n = __)</code></pre>
 </div>
 <div id="here-is-the-solution" class="section level2">
 <h2>Here is the solution:</h2>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(1:4, number_of_bags) %&gt;% 
+  filter(country_of_origin == &quot;Brazil&quot;) %&gt;%
+  filter(total_cup_points &gt; 70) %&gt;% 
+  head(n = 3)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   total_cup_points species owner     country_of_origin number_of_bags
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;                      &lt;dbl&gt;
+## 1             88.8 Arabica ji-ae ahn Brazil                       100
+## 2             86.9 Arabica nucoffee  Brazil                         3
+## 3             86.4 Arabica nucoffee  Brazil                        29</code></pre>
 </div>
-<div id="mutate-i-need-a-new-column" class="section level2">
-<h2><em>Mutate:</em> I need a new column!</h2>
+<div id="arrange-lets-bring-some-order-to-data" class="section level2">
+<h2><em>Arrange:</em> Let’s bring some order to data!</h2>
+<p><code>arrange</code> sorts a data frame by one or more columns. Let’s say we want to look at our data frame arranged by <code>sweetness</code>. In default, your dataset will be arranged bu ascending order.</p>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  arrange(sweetness) %&gt;% 
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 43
+##   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
+## 1              0   Arabica bism… Honduras         los hica… 103        cigr…
+## 2             59.8 Arabica juan… Guatemala        finca el… &lt;NA&gt;       bene…
+## 3             77.6 Arabica kona… United States (… &lt;NA&gt;      &lt;NA&gt;       &lt;NA&gt; 
+## 4             67.9 Arabica myri… Haiti            200 farms &lt;NA&gt;       coeb…
+## 5             63.1 Arabica expo… Nicaragua        finca la… 017-053-0… bene…
+## 6             82.3 Arabica ipan… Brazil           rio verde &lt;NA&gt;       ipan…
+## # … with 36 more variables: ico_number &lt;chr&gt;, company &lt;chr&gt;, altitude &lt;chr&gt;,
+## #   region &lt;chr&gt;, producer &lt;chr&gt;, number_of_bags &lt;dbl&gt;, bag_weight &lt;chr&gt;,
+## #   in_country_partner &lt;chr&gt;, harvest_year &lt;chr&gt;, grading_date &lt;chr&gt;,
+## #   owner_1 &lt;chr&gt;, variety &lt;chr&gt;, processing_method &lt;chr&gt;, aroma &lt;dbl&gt;,
+## #   flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;, acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;,
+## #   uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;,
+## #   moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;,
+## #   category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;, certification_body &lt;chr&gt;,
+## #   certification_address &lt;chr&gt;, certification_contact &lt;chr&gt;,
+## #   unit_of_measurement &lt;chr&gt;, altitude_low_meters &lt;dbl&gt;,
+## #   altitude_high_meters &lt;dbl&gt;, altitude_mean_meters &lt;dbl&gt;</code></pre>
+<p>If we want to order it by descending order of sweetness, we can use this syntax.</p>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(total_cup_points, species, country_of_origin, color, sweetness) %&gt;% 
+  arrange(desc(sweetness)) %&gt;% 
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   total_cup_points species country_of_origin color        sweetness
+##              &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;            &lt;dbl&gt;
+## 1             90.6 Arabica Ethiopia          Green               10
+## 2             89.9 Arabica Ethiopia          Green               10
+## 3             89.8 Arabica Guatemala         &lt;NA&gt;                10
+## 4             89   Arabica Ethiopia          Green               10
+## 5             88.8 Arabica Ethiopia          Green               10
+## 6             88.8 Arabica Brazil            Bluish-Green        10</code></pre>
 </div>
-<div id="arrange-lets-order-the-rows" class="section level2">
-<h2><em>Arrange:</em> Let’s order the rows</h2>
+<div id="group_by-summarise-lets-create-associations-among-groups" class="section level2">
+<h2><em>Group_by &amp; Summarise:</em> Let’s create associations among groups!</h2>
+<p>We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is). <code>group_by</code> gives the data frame a grouping using one or more columns, which modifies the subsequent call to <code>summarize</code>.</p>
+<p>We can use functions like <code>mean</code>, <code>median</code>, <code>sum</code>, <code>sd</code>, <code>max</code>, <code>min</code> to find out some group statistics inside of <code>summarize</code> function.</p>
+<pre class="r"><code>coffee_ratings %&gt;%
+  group_by(species) %&gt;%
+  summarise(avg_rating = mean(total_cup_points),
+            proportion = n()/nrow(coffee_ratings))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   species avg_rating proportion
+##   &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Arabica       82.1     0.979 
+## 2 Robusta       80.9     0.0209</code></pre>
+<pre class="r"><code>coffee_ratings %&gt;%
+  group_by(country_of_origin) %&gt;%
+  summarise(avg_rating = mean(total_cup_points),
+            median_rating = median(total_cup_points)
+            )</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 37 x 3
+##    country_of_origin avg_rating median_rating
+##    &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;
+##  1 Brazil                  82.4          82.4
+##  2 Burundi                 81.8          81.8
+##  3 China                   82.9          83.2
+##  4 Colombia                83.1          83.2
+##  5 Costa Rica              82.8          83.2
+##  6 Cote d?Ivoire           79.3          79.3
+##  7 Ecuador                 80.2          78.8
+##  8 El Salvador             83.1          82.8
+##  9 Ethiopia                85.5          85.2
+## 10 Guatemala               81.8          82.5
+## # … with 27 more rows</code></pre>
+</div>
+<div id="mutate-we-need-a-new-column" class="section level2">
+<h2><em>Mutate:</em> We need a new column!</h2>
+<p><code>mutate</code> lets us add or overwrite columns by computing a new value for them. For example, in the code below, we want a column name <code>is_processing_method_full</code> which is filled by checking if <code>processing_method</code> have some value or not. If it is not NA, we’ll write 1, otherwise 0.</p>
+<p>We didn’t have <code>is_processing_method_full</code> before but we create it by using <code>processing_method</code> variable.</p>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(species, country_of_origin, processing_method) %&gt;% 
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))</code></pre>
+<pre><code>## # A tibble: 1,339 x 4
+##    species country_of_origin processing_method is_processing_method_full
+##    &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;                                 &lt;dbl&gt;
+##  1 Arabica Ethiopia          Washed / Wet                              1
+##  2 Arabica Ethiopia          Washed / Wet                              1
+##  3 Arabica Guatemala         &lt;NA&gt;                                      0
+##  4 Arabica Ethiopia          Natural / Dry                             1
+##  5 Arabica Ethiopia          Washed / Wet                              1
+##  6 Arabica Brazil            Natural / Dry                             1
+##  7 Arabica Peru              Washed / Wet                              1
+##  8 Arabica Ethiopia          &lt;NA&gt;                                      0
+##  9 Arabica Ethiopia          &lt;NA&gt;                                      0
+## 10 Arabica Ethiopia          Natural / Dry                             1
+## # … with 1,329 more rows</code></pre>
 </div>
 <div id="lets-put-it-all-together" class="section level2">
 <h2>Let’s put it all together!</h2>
+<p>We want to look at the mean of aroma, flavor and aftertast variables by countries. Can we find the true order of that code piece?</p>
+<pre class="r"><code>1- filter(species == &quot;Arabica&quot;)  
+2- filter(!is.na(country_of_origin)) 
+3- select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste)
+4- coffee_ratings
+5- arrange(mean_aroma) 
+6- summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste))
+7- group_by(country_of_origin)</code></pre>
 </div>
 <div id="here-is-the-solution-1" class="section level2">
-<h2>Here is the solution</h2>
+<h2>Here is the solution:</h2>
+<pre class="r"><code>coffee_ratings %&gt;% 
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %&gt;%
+  filter(species == &quot;Arabica&quot;) %&gt;% 
+  filter(!is.na(country_of_origin)) %&gt;% 
+  group_by(country_of_origin) %&gt;% 
+  summarise(mean_aroma = mean(aroma),
+            mean_flavor = mean(flavor),
+            mean_aftertaste = mean(aftertaste)) %&gt;%
+  arrange(mean_aroma) </code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 36 x 4
+##    country_of_origin mean_aroma mean_flavor mean_aftertaste
+##    &lt;chr&gt;                  &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
+##  1 Haiti                   7.15        7.00            7.11
+##  2 Mauritius               7.25        7.25            7.17
+##  3 Honduras                7.29        7.23            7.06
+##  4 Myanmar                 7.30        7.33            7.12
+##  5 Nicaragua               7.33        7.32            7.20
+##  6 Philippines             7.36        7.23            7.30
+##  7 Burundi                 7.42        7.46            7.25
+##  8 Cote d?Ivoire           7.42        7.25            6.83
+##  9 Mexico                  7.46        7.38            7.23
+## 10 Vietnam                 7.48        7.48            7.30
+## # … with 26 more rows</code></pre>
 </div>
 <div id="good-job" class="section level2">
 <h2>Good job!</h2>
 <p>Thank you for joining the training!</p>
+<p>You can find the all lesson materials my <a href="https://github.com/UniversalTourist/tidyverse_trainer_exam_materials">Github page.</a></p>
+<p>Any questions? I’d be happy to answer!</p>
 </div>
 
 
