@@ -4,6 +4,9 @@ library(tidyverse)
 #Load data
 coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 
+## write data to csv (do not tell about this in lesson)
+##write_csv(coffee_ratings, "coffee_ratings.csv")
+
 ## First Glimpse
 glimpse(coffee_ratings)
 
@@ -25,36 +28,42 @@ coffee_ratings %>%
 
 
 ## Select
-coffee_ratings %>% 
-  select(species, country_of_origin, color, certification_body) %>% 
-  head()
+select(coffee_ratings, species, country_of_origin, color, certification_body) 
 
-select(coffee_ratings, 1:4, 21:34) %>% 
-  head()
+select(coffee_ratings, 1:4, 21:34) 
 
 ##Filter
-coffee_ratings %>% 
-  filter(country_of_origin == "Ethiopia") %>% 
-  head(n = 3)
+filter(coffee_ratings, country_of_origin == "Ethiopia")
 
+filter(coffee_ratings, number_of_bags >= 60)
+  
+## Arrange
+arrange(coffee_ratings, total_cup_points)
+
+arrange(coffee_ratings, desc(total_cup_points)) 
+
+## Steps
+coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
+coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia
+
+## Pipes
+coffee_ratings_ethiopia <- 
+  coffee_ratings %>%
+  select(species, certification_body, country_of_origin) %>% 
+  filter(country_of_origin == "Ethiopia") %>% 
+  arrange(total_cup_points)
+  
 ## Solution - 1
 coffee_ratings %>% 
   select(1:4, number_of_bags) %>% 
   filter(country_of_origin == "Brazil") %>%
   filter(total_cup_points > 70) %>% 
-  head(n = 3)
+  arrange(desc(number_of_bags))
 
 
-## Arrange
-coffee_ratings %>% 
-  arrange(sweetness) %>% 
-  head()
 
-
-coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
-  arrange(desc(sweetness)) %>% 
-  head()
 
 ## Group by & Summarise
 coffee_ratings %>%

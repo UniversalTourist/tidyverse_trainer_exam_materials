@@ -1,12 +1,13 @@
-Week 1: Intro to Data Wrangling with dplyr
+Week 2: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
-date: "2020-07-19"
+date: "2020-07-28"
 autosize: true
 
 Install Libraries
 ========================================================
-We'll load the packages with `library(tidyverse)` instead of loading the core packages. Today we'll focus on `dplyr` (and one function from `readr` package for one-time).
+We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
+Today we'll focus on `dplyr`, a package that transforms data. dplyr implements a grammar for transforming tabular data.
 
 
 ```r
@@ -16,14 +17,15 @@ library(tidyverse)
 
 Load Data Into R
 ========================================================
-Next wthing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
+Next thing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
 
-We'll use `read_csv` function from readr package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
+We'll use `read_csv` function from `readr` package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
 
 
 ```r
-coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 ```
+
 
 First Glimpse to Data 
 ========================================================
@@ -94,10 +96,14 @@ head(coffee_ratings, n = 3)
 
 There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
+Questions arise
+========================================================
+
+
 Comparison with base R and Tidyverse
 ========================================================
-Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse. 
-The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive? 
+Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
+The two code chunks are doing the same thing: selecting two columns from our dataframe. 
 
 
 ```r
@@ -106,123 +112,258 @@ coffee_ratings[ , c('species', 'country_of_origin')]
 
 
 ```r
-coffee_ratings %>% 
-  select(species, country_of_origin)
+  select(coffee_ratings, species, country_of_origin)
 ```
-
-
-========================================================
-## Did you see *Pipes*? *( %>% )*
-
-Did you see that ( %>% ) sign in the previous code piece? 
-It is called Pipe and it helps us to connect our dplyr verbs. We'll use it a lot during our session! 
-Let's try to read our code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by `species` variable and then I summarise it with two statistics. One is mean of a variable and the other is some proportion. 
-
-What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
-
-
-```r
-coffee_ratings %>%
-  group_by(species) %>%
-  summarise(avg_rating = mean(total_cup_points),
-            proportion = n()/nrow(coffee_ratings))
-```
-
-
 
 ========================================================
 ## *Select:* Choosing is not losing!
 
-Now we are moving to our first verb. `select` helps us select the variables we want to use or we need for our analysis. We probably don't need all 43 variables to answer some questions.
+We are moving to our first dplyr verb. `select` helps us select the variables we want to use or we need for our analysis. 
 
 
 ```r
-coffee_ratings %>% 
-  select(species, country_of_origin, color, certification_body) %>% 
-  head()
+ select(coffee_ratings, species, country_of_origin, color, certification_body) 
 ```
 
 ```
-# A tibble: 6 x 4
-  species country_of_origin color        certification_body                
-  <chr>   <chr>             <chr>        <chr>                             
-1 Arabica Ethiopia          Green        METAD Agricultural Development plc
-2 Arabica Ethiopia          Green        METAD Agricultural Development plc
-3 Arabica Guatemala         <NA>         Specialty Coffee Association      
-4 Arabica Ethiopia          Green        METAD Agricultural Development plc
-5 Arabica Ethiopia          Green        METAD Agricultural Development plc
-6 Arabica Brazil            Bluish-Green Specialty Coffee Institute of Asia
+# A tibble: 1,339 x 4
+   species country_of_origin color        certification_body                
+   <chr>   <chr>             <chr>        <chr>                             
+ 1 Arabica Ethiopia          Green        METAD Agricultural Development plc
+ 2 Arabica Ethiopia          Green        METAD Agricultural Development plc
+ 3 Arabica Guatemala         <NA>         Specialty Coffee Association      
+ 4 Arabica Ethiopia          Green        METAD Agricultural Development plc
+ 5 Arabica Ethiopia          Green        METAD Agricultural Development plc
+ 6 Arabica Brazil            Bluish-Green Specialty Coffee Institute of Asia
+ 7 Arabica Peru              Bluish-Green Specialty Coffee Institute of Asia
+ 8 Arabica Ethiopia          <NA>         Ethiopia Commodity Exchange       
+ 9 Arabica Ethiopia          <NA>         Ethiopia Commodity Exchange       
+10 Arabica Ethiopia          Green        METAD Agricultural Development plc
+# … with 1,329 more rows
 ```
+
 
 
 ========================================================
-## *Select:* we can use the column index to choose variables
+`select` has helpers like the one on the below. You can select range of columns by using `:`
 
 
 ```r
- select(coffee_ratings, 1:4, 21:34) %>% 
-  head()
+  select(coffee_ratings, 1:4, 21:34) 
 ```
 
 ```
-# A tibble: 6 x 18
-  total_cup_points species owner country_of_orig… aroma flavor aftertaste
-             <dbl> <chr>   <chr> <chr>            <dbl>  <dbl>      <dbl>
-1             90.6 Arabica meta… Ethiopia          8.67   8.83       8.67
-2             89.9 Arabica meta… Ethiopia          8.75   8.67       8.5 
-3             89.8 Arabica grou… Guatemala         8.42   8.5        8.42
-4             89   Arabica yidn… Ethiopia          8.17   8.58       8.42
-5             88.8 Arabica meta… Ethiopia          8.25   8.5        8.25
-6             88.8 Arabica ji-a… Brazil            8.58   8.42       8.42
-# … with 11 more variables: acidity <dbl>, body <dbl>, balance <dbl>,
-#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
-#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>
+# A tibble: 1,339 x 18
+   total_cup_points species owner country_of_orig… aroma flavor aftertaste
+              <dbl> <chr>   <chr> <chr>            <dbl>  <dbl>      <dbl>
+ 1             90.6 Arabica meta… Ethiopia          8.67   8.83       8.67
+ 2             89.9 Arabica meta… Ethiopia          8.75   8.67       8.5 
+ 3             89.8 Arabica grou… Guatemala         8.42   8.5        8.42
+ 4             89   Arabica yidn… Ethiopia          8.17   8.58       8.42
+ 5             88.8 Arabica meta… Ethiopia          8.25   8.5        8.25
+ 6             88.8 Arabica ji-a… Brazil            8.58   8.42       8.42
+ 7             88.8 Arabica hugo… Peru              8.42   8.5        8.33
+ 8             88.7 Arabica ethi… Ethiopia          8.25   8.33       8.5 
+ 9             88.4 Arabica ethi… Ethiopia          8.67   8.67       8.58
+10             88.2 Arabica diam… Ethiopia          8.08   8.58       8.5 
+# … with 1,329 more rows, and 11 more variables: acidity <dbl>, body <dbl>,
+#   balance <dbl>, uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>,
+#   cupper_points <dbl>, moisture <dbl>, category_one_defects <dbl>,
+#   quakers <dbl>, color <chr>
 ```
 
-
-========================================================
-Most of the dplyr verbs have that structure:
-
-```r
-1- dplyr_verb(data_frame, colum_name, some_other_arguments)
-2- data_frame %>% dplyr_verb(column_name, some_other_arguments)
-```
 
 ========================================================
 ## *Filter:* Do we want everything?
+`filter` helps us to extract rows that meet logical criteria. 
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
 
 ```r
-coffee_ratings %>% 
-  filter(country_of_origin == "Ethiopia") %>% 
-  head(n = 3)
+filter(coffee_ratings, country_of_origin == "Ethiopia")
 ```
 
 ```
-# A tibble: 3 x 43
-  total_cup_points species owner country_of_orig… farm_name lot_number mill 
-             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
-1             90.6 Arabica meta… Ethiopia         metad plc <NA>       meta…
-2             89.9 Arabica meta… Ethiopia         metad plc <NA>       meta…
-3             89   Arabica yidn… Ethiopia         yidnekac… <NA>       wole…
-# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
-#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
-#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
-#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
-#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
-#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
-#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
+# A tibble: 44 x 43
+   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+              <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+ 1             90.6 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 2             89.9 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 3             89   Arabica yidn… Ethiopia         yidnekac… <NA>       wole…
+ 4             88.8 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 5             88.7 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+ 6             88.4 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+ 7             88.2 Arabica diam… Ethiopia         tulla co… <NA>       tull…
+ 8             88.1 Arabica moha… Ethiopia         fahem co… <NA>       <NA> 
+ 9             87.8 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+10             87.3 Arabica ethi… Ethiopia         <NA>      <NA>       <NA> 
+# … with 34 more rows, and 36 more variables: ico_number <chr>, company <chr>,
+#   altitude <chr>, region <chr>, producer <chr>, number_of_bags <dbl>,
+#   bag_weight <chr>, in_country_partner <chr>, harvest_year <chr>,
+#   grading_date <chr>, owner_1 <chr>, variety <chr>, processing_method <chr>,
+#   aroma <dbl>, flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>,
+#   balance <dbl>, uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>,
+#   cupper_points <dbl>, moisture <dbl>, category_one_defects <dbl>,
+#   quakers <dbl>, color <chr>, category_two_defects <dbl>, expiration <chr>,
+#   certification_body <chr>, certification_address <chr>,
+#   certification_contact <chr>, unit_of_measurement <chr>,
+#   altitude_low_meters <dbl>, altitude_high_meters <dbl>,
+#   altitude_mean_meters <dbl>
+```
+
+
+```r
+filter(coffee_ratings, number_of_bags >= 60)
+```
+
+```
+# A tibble: 789 x 43
+   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+              <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+ 1             90.6 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 2             89.9 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 3             89   Arabica yidn… Ethiopia         yidnekac… <NA>       wole…
+ 4             88.8 Arabica meta… Ethiopia         metad plc <NA>       meta…
+ 5             88.8 Arabica ji-a… Brazil           <NA>      <NA>       <NA> 
+ 6             88.8 Arabica hugo… Peru             <NA>      <NA>       hvc  
+ 7             88.7 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+ 8             88.4 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+ 9             88.1 Arabica moha… Ethiopia         fahem co… <NA>       <NA> 
+10             87.8 Arabica ethi… Ethiopia         aolme     <NA>       c.p.…
+# … with 779 more rows, and 36 more variables: ico_number <chr>, company <chr>,
+#   altitude <chr>, region <chr>, producer <chr>, number_of_bags <dbl>,
+#   bag_weight <chr>, in_country_partner <chr>, harvest_year <chr>,
+#   grading_date <chr>, owner_1 <chr>, variety <chr>, processing_method <chr>,
+#   aroma <dbl>, flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>,
+#   balance <dbl>, uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>,
+#   cupper_points <dbl>, moisture <dbl>, category_one_defects <dbl>,
+#   quakers <dbl>, color <chr>, category_two_defects <dbl>, expiration <chr>,
+#   certification_body <chr>, certification_address <chr>,
+#   certification_contact <chr>, unit_of_measurement <chr>,
+#   altitude_low_meters <dbl>, altitude_high_meters <dbl>,
+#   altitude_mean_meters <dbl>
+```
+
+========================================================
+## *Arrange:*  Let's bring some order to data!
+
+`arrange` order rows from smallest to largest values. 
+Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
+
+
+```r
+  arrange(coffee_ratings, total_cup_points)
+```
+
+```
+# A tibble: 1,339 x 43
+   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+              <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+ 1              0   Arabica bism… Honduras         los hica… 103        cigr…
+ 2             59.8 Arabica juan… Guatemala        finca el… <NA>       bene…
+ 3             63.1 Arabica expo… Nicaragua        finca la… 017-053-0… bene…
+ 4             67.9 Arabica myri… Haiti            200 farms <NA>       coeb…
+ 5             68.3 Arabica juan… Mexico           el cente… <NA>       la e…
+ 6             69.2 Arabica cade… Honduras         cerro bu… <NA>       cade…
+ 7             69.2 Arabica cade… Honduras         cerro bu… <NA>       cade…
+ 8             69.3 Arabica cade… Honduras         cerro bu… <NA>       cade…
+ 9             70.7 Arabica volc… Brazil           <NA>      2017/2018… copag
+10             70.8 Arabica kurt… Mexico           various   <NA>       f.i.…
+# … with 1,329 more rows, and 36 more variables: ico_number <chr>,
+#   company <chr>, altitude <chr>, region <chr>, producer <chr>,
+#   number_of_bags <dbl>, bag_weight <chr>, in_country_partner <chr>,
+#   harvest_year <chr>, grading_date <chr>, owner_1 <chr>, variety <chr>,
+#   processing_method <chr>, aroma <dbl>, flavor <dbl>, aftertaste <dbl>,
+#   acidity <dbl>, body <dbl>, balance <dbl>, uniformity <dbl>,
+#   clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>, moisture <dbl>,
+#   category_one_defects <dbl>, quakers <dbl>, color <chr>,
 #   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
 #   certification_address <chr>, certification_contact <chr>,
 #   unit_of_measurement <chr>, altitude_low_meters <dbl>,
 #   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
 ```
 
-How should we fill the blank areas?
 ========================================================
-Now it's time for a quick question. 
-We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
+## *Arrange:*  Let's bring some order to data!
+If we want to order it by descending order of total_cup_points, we can use this syntax:
+
+```r
+  arrange(coffee_ratings, desc(total_cup_points))
+```
+
+```
+# A tibble: 1,339 x 43
+   total_cup_points species owner country_of_orig… farm_name lot_number mill 
+              <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
+ 1             90.6 Arabica meta… Ethiopia         "metad p… <NA>       meta…
+ 2             89.9 Arabica meta… Ethiopia         "metad p… <NA>       meta…
+ 3             89.8 Arabica grou… Guatemala        "san mar… <NA>       <NA> 
+ 4             89   Arabica yidn… Ethiopia         "yidneka… <NA>       wole…
+ 5             88.8 Arabica meta… Ethiopia         "metad p… <NA>       meta…
+ 6             88.8 Arabica ji-a… Brazil            <NA>     <NA>       <NA> 
+ 7             88.8 Arabica hugo… Peru              <NA>     <NA>       hvc  
+ 8             88.7 Arabica ethi… Ethiopia         "aolme"   <NA>       c.p.…
+ 9             88.4 Arabica ethi… Ethiopia         "aolme"   <NA>       c.p.…
+10             88.2 Arabica diam… Ethiopia         "tulla c… <NA>       tull…
+# … with 1,329 more rows, and 36 more variables: ico_number <chr>,
+#   company <chr>, altitude <chr>, region <chr>, producer <chr>,
+#   number_of_bags <dbl>, bag_weight <chr>, in_country_partner <chr>,
+#   harvest_year <chr>, grading_date <chr>, owner_1 <chr>, variety <chr>,
+#   processing_method <chr>, aroma <dbl>, flavor <dbl>, aftertaste <dbl>,
+#   acidity <dbl>, body <dbl>, balance <dbl>, uniformity <dbl>,
+#   clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>, moisture <dbl>,
+#   category_one_defects <dbl>, quakers <dbl>, color <chr>,
+#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
+#   certification_address <chr>, certification_contact <chr>,
+#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
+#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
+```
+
+Steps
+========================================================
+
+
+```r
+coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
+coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia
+```
+
+Pipes
+========================================================
+Pipe helps us to connect our dplyr verbs. Passes results on left into first argument of function on right. 
+
+Let's try to do the same thing with pipes and read the code below: 
+
+```r
+coffee_ratings_ethiopia <- 
+  coffee_ratings %>%
+  select(species, certification_body, country_of_origin) %>% 
+  filter(country_of_origin == "Ethiopia") %>% 
+  arrange(total_cup_points)
+```
+
+Structure of dplyr functions
+========================================================
+Most of the dplyr verbs have that structure:
+
+```r
+1- dplyr_verb(data_frame, colum_name, some_other_arguments)
+
+2- data_frame %>% 
+    dplyr_verb(column_name, some_other_arguments) %>% 
+    dplyr_verb(column_name, some_other_arguments)
+```
+
+
+Your Turn: How should we fill the blank areas?
+========================================================
+Now it's time for a pop-quiz! 
+We need to:
+- Select **total_cup_points, species, owner, countyr_of_origin and number_of_bags** 
+- Then Filter **country of origin for only Brazil** and **total cup points is higher than 70**
+- Then Arrange it by number_of_bags in descending order.
 
 
 ```r
@@ -230,8 +371,9 @@ coffee_ratings data %>%
   ____(_:_, number_of_bags) %>% 
   ____(____ == "Brazil") %>%
   ____(total_cup_points > ___) %>% 
-  head(n = __)
+  ____(desc(number_of_bags))
 ```
+
 
 Here is the solution:
 ========================================================
@@ -242,75 +384,27 @@ coffee_ratings %>%
   select(1:4, number_of_bags) %>% 
   filter(country_of_origin == "Brazil") %>%
   filter(total_cup_points > 70) %>% 
-  head(n = 3)
+  arrange(desc(number_of_bags))
 ```
 
 ```
-# A tibble: 3 x 5
-  total_cup_points species owner     country_of_origin number_of_bags
-             <dbl> <chr>   <chr>     <chr>                      <dbl>
-1             88.8 Arabica ji-ae ahn Brazil                       100
-2             86.9 Arabica nucoffee  Brazil                         3
-3             86.4 Arabica nucoffee  Brazil                        29
+# A tibble: 132 x 5
+   total_cup_points species owner                country_of_orig… number_of_bags
+              <dbl> <chr>   <chr>                <chr>                     <dbl>
+ 1             82.2 Arabica klem organics        Brazil                     1062
+ 2             81.1 Arabica gregorio sebba       Brazil                      500
+ 3             80.2 Arabica volcafe ltda. - bra… Brazil                      440
+ 4             80.1 Arabica brayan cunha souza   Brazil                      440
+ 5             75.7 Arabica volcafe ltda. - bra… Brazil                      440
+ 6             84.5 Arabica alexandra katona-ca… Brazil                      320
+ 7             84   Arabica ipanema coffees      Brazil                      320
+ 8             83.9 Arabica ipanema coffees      Brazil                      320
+ 9             83.9 Arabica ipanema coffees      Brazil                      320
+10             83.8 Arabica ipanema coffees      Brazil                      320
+# … with 122 more rows
 ```
 
-========================================================
-## *Arrange:*  Let's bring some order to data!
 
-`arrange` sorts a data frame by one or more columns. Let's say we want to look at our data frame arranged by `sweetness`. In default, your dataset will be arranged bu ascending order.
-
-
-```r
-coffee_ratings %>% 
-  arrange(sweetness) %>% 
-  head()
-```
-
-```
-# A tibble: 6 x 43
-  total_cup_points species owner country_of_orig… farm_name lot_number mill 
-             <dbl> <chr>   <chr> <chr>            <chr>     <chr>      <chr>
-1              0   Arabica bism… Honduras         los hica… 103        cigr…
-2             59.8 Arabica juan… Guatemala        finca el… <NA>       bene…
-3             77.6 Arabica kona… United States (… <NA>      <NA>       <NA> 
-4             67.9 Arabica myri… Haiti            200 farms <NA>       coeb…
-5             63.1 Arabica expo… Nicaragua        finca la… 017-053-0… bene…
-6             82.3 Arabica ipan… Brazil           rio verde <NA>       ipan…
-# … with 36 more variables: ico_number <chr>, company <chr>, altitude <chr>,
-#   region <chr>, producer <chr>, number_of_bags <dbl>, bag_weight <chr>,
-#   in_country_partner <chr>, harvest_year <chr>, grading_date <chr>,
-#   owner_1 <chr>, variety <chr>, processing_method <chr>, aroma <dbl>,
-#   flavor <dbl>, aftertaste <dbl>, acidity <dbl>, body <dbl>, balance <dbl>,
-#   uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>, cupper_points <dbl>,
-#   moisture <dbl>, category_one_defects <dbl>, quakers <dbl>, color <chr>,
-#   category_two_defects <dbl>, expiration <chr>, certification_body <chr>,
-#   certification_address <chr>, certification_contact <chr>,
-#   unit_of_measurement <chr>, altitude_low_meters <dbl>,
-#   altitude_high_meters <dbl>, altitude_mean_meters <dbl>
-```
-
-========================================================
-## *Arrange:*  Let's bring some order to data!
-If we want to order it by descending order of sweetness, we can use this syntax.
-
-```r
-coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
-  arrange(desc(sweetness)) %>% 
-  head()
-```
-
-```
-# A tibble: 6 x 4
-  species country_of_origin color        sweetness
-  <chr>   <chr>             <chr>            <dbl>
-1 Arabica Ethiopia          Green               10
-2 Arabica Ethiopia          Green               10
-3 Arabica Guatemala         <NA>                10
-4 Arabica Ethiopia          Green               10
-5 Arabica Ethiopia          Green               10
-6 Arabica Brazil            Bluish-Green        10
-```
 
 
 ========================================================

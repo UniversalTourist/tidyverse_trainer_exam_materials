@@ -1,4 +1,4 @@
-Week 1: Intro to Data Wrangling with dplyr
+Week 2: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
 date: "`r Sys.Date()`"
@@ -6,7 +6,8 @@ autosize: true
 
 Install Libraries
 ========================================================
-We'll load the packages with `library(tidyverse)` instead of loading the core packages. Today we'll focus on `dplyr` (and one function from `readr` package for one-time).
+We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
+Today we'll focus on `dplyr`, a package that transforms data. dplyr implements a grammar for transforming tabular data.
 
 ```{r}
 #install.packages("tidyverse")
@@ -15,13 +16,14 @@ library(tidyverse)
 
 Load Data Into R
 ========================================================
-Next wthing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
+Next thing we'll do is load the data into our R environment. We'll use a data set about coffee ratings from weekly [Tidy Tuesday challenge ](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md). 
 
-We'll use `read_csv` function from readr package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
+We'll use `read_csv` function from `readr` package to get the data, and assign it to `coffee_ratings`. In the rest of the document, we'll use that name to call our data frame.
 
 ```{r, warning=FALSE, message=FALSE, echo=TRUE}
-coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 ```
+
 
 First Glimpse to Data 
 ========================================================
@@ -42,94 +44,123 @@ head(coffee_ratings, n = 3)
 
 There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
+Questions arise
+========================================================
+
+
 Comparison with base R and Tidyverse
 ========================================================
-Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse. 
-The two code chunks are doing the same thing: selecting two columns from our dataframe. Can you tell which one is more intuitive? 
+Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
+The two code chunks are doing the same thing: selecting two columns from our dataframe. 
 
-```{r, warning=FALSE, message=FALSE, eval = FALSE}
-
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
 coffee_ratings[ , c('species', 'country_of_origin')]
-
 ```
 
-```{r warning=FALSE, message=FALSE, eval = FALSE}
-coffee_ratings %>% 
-  select(species, country_of_origin)
+```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
+  select(coffee_ratings, species, country_of_origin)
 ```
-
-
-========================================================
-## Did you see *Pipes*? *( %>% )*
-
-Did you see that ( %>% ) sign in the previous code piece? 
-It is called Pipe and it helps us to connect our dplyr verbs. We'll use it a lot during our session! 
-Let's try to read our code below: I have the dataframe called coffee_ratings, I call it. And then I group that dataframe by `species` variable and then I summarise it with two statistics. One is mean of a variable and the other is some proportion. 
-
-What I see in here is that everything is chained, right? I can read that code from left to right like a sentence. Pipe helps us to connect those verbs.
-
-```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
-coffee_ratings %>%
-  group_by(species) %>%
-  summarise(avg_rating = mean(total_cup_points),
-            proportion = n()/nrow(coffee_ratings))
-```
-
-
 
 ========================================================
 ## *Select:* Choosing is not losing!
 
-Now we are moving to our first verb. `select` helps us select the variables we want to use or we need for our analysis. We probably don't need all 43 variables to answer some questions.
+We are moving to our first dplyr verb. `select` helps us select the variables we want to use or we need for our analysis. 
+
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+ select(coffee_ratings, species, country_of_origin, color, certification_body) 
+```
+
+
+
+========================================================
+`select` has helpers like the one on the below. You can select range of columns by using `:`
 
 ```{r, warning=FALSE, message=FALSE}
-coffee_ratings %>% 
-  select(species, country_of_origin, color, certification_body) %>% 
-  head()
+  select(coffee_ratings, 1:4, 21:34) 
 ```
 
 
 ========================================================
-## *Select:* we can use the column index to choose variables
+## *Filter:* Do we want everything?
+`filter` helps us to extract rows that meet logical criteria. 
+Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
-```{r, warning=FALSE, message=FALSE}
- select(coffee_ratings, 1:4, 21:34) %>% 
-  head()
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+filter(coffee_ratings, country_of_origin == "Ethiopia")
 ```
 
+```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+filter(coffee_ratings, number_of_bags >= 60)
+```
 
+========================================================
+## *Arrange:*  Let's bring some order to data!
+
+`arrange` order rows from smallest to largest values. 
+Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
+
+```{r, eval=TRUE, echo=TRUE}
+  arrange(coffee_ratings, total_cup_points)
+```
+
+========================================================
+## *Arrange:*  Let's bring some order to data!
+If we want to order it by descending order of total_cup_points, we can use this syntax:
+```{r, eval=TRUE, echo=TRUE}
+  arrange(coffee_ratings, desc(total_cup_points))
+```
+
+Steps
+========================================================
+
+```{r, eval=FALSE}
+coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
+coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia
+```
+
+Pipes
+========================================================
+Pipe helps us to connect our dplyr verbs. Passes results on left into first argument of function on right. 
+
+Let's try to do the same thing with pipes and read the code below: 
+```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
+coffee_ratings_ethiopia <- 
+  coffee_ratings %>%
+  select(species, certification_body, country_of_origin) %>% 
+  filter(country_of_origin == "Ethiopia") %>% 
+  arrange(total_cup_points)
+```
+
+Structure of dplyr functions
 ========================================================
 Most of the dplyr verbs have that structure:
 ```{r, eval=FALSE, echo=TRUE}
 1- dplyr_verb(data_frame, colum_name, some_other_arguments)
-2- data_frame %>% dplyr_verb(column_name, some_other_arguments)
+
+2- data_frame %>% 
+    dplyr_verb(column_name, some_other_arguments) %>% 
+    dplyr_verb(column_name, some_other_arguments)
 ```
 
-========================================================
-## *Filter:* Do we want everything?
-Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
-```{r, warning=FALSE, message=FALSE}
-coffee_ratings %>% 
-  filter(country_of_origin == "Ethiopia") %>% 
-  head(n = 3)
-```
-
-How should we fill the blank areas?
+Your Turn: How should we fill the blank areas?
 ========================================================
-Now it's time for a quick question. 
-We need to *select* total_cup_points, species, owner, countyr_of_origin and number_of_bags. Then *filter* country of origin for only Brazil and total cup points is higher than 70, then look at the *first 3 rows* of data set.
+Now it's time for a pop-quiz! 
+We need to:
+- Select **total_cup_points, species, owner, countyr_of_origin and number_of_bags** 
+- Then Filter **country of origin for only Brazil** and **total cup points is higher than 70**
+- Then Arrange it by number_of_bags in descending order.
 
 ```{r, eval=FALSE, echo = TRUE}
-
 coffee_ratings data %>% 
   ____(_:_, number_of_bags) %>% 
   ____(____ == "Brazil") %>%
   ____(total_cup_points > ___) %>% 
-  head(n = __)
-  
-
+  ____(desc(number_of_bags))
 ```
+
 
 Here is the solution:
 ========================================================
@@ -139,29 +170,10 @@ coffee_ratings %>%
   select(1:4, number_of_bags) %>% 
   filter(country_of_origin == "Brazil") %>%
   filter(total_cup_points > 70) %>% 
-  head(n = 3)
+  arrange(desc(number_of_bags))
 ```
 
-========================================================
-## *Arrange:*  Let's bring some order to data!
 
-`arrange` sorts a data frame by one or more columns. Let's say we want to look at our data frame arranged by `sweetness`. In default, your dataset will be arranged bu ascending order.
-
-```{r}
-coffee_ratings %>% 
-  arrange(sweetness) %>% 
-  head()
-```
-
-========================================================
-## *Arrange:*  Let's bring some order to data!
-If we want to order it by descending order of sweetness, we can use this syntax.
-```{r}
-coffee_ratings %>% 
-  select(species, country_of_origin, color, sweetness) %>% 
-  arrange(desc(sweetness)) %>% 
-  head()
-```
 
 
 ========================================================
