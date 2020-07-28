@@ -8,12 +8,15 @@ output:
     theme: flatly
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 ## Install Libraries
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
 Today we'll focus on `dplyr`, a package that transforms data. dplyr implements a grammar for transforming tabular data.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r warning=FALSE, message=FALSE, echo=TRUE}
 library(tidyverse)
 ```
 
@@ -54,7 +57,7 @@ coffee_ratings[ , c('species', 'country_of_origin')]
 ```
 
 ```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
-  select(coffee_ratings, species, country_of_origin)
+select(coffee_ratings, species, country_of_origin)
 ```
 
 
@@ -62,13 +65,13 @@ coffee_ratings[ , c('species', 'country_of_origin')]
 We are moving to our first dplyr verb. `select` helps us select the variables we want to use or we need for our analysis. 
 
 ```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
- select(coffee_ratings, species, country_of_origin, color, certification_body) 
+ select(coffee_ratings, species, country_of_origin, color, certification_body)
 ```
 
 `select` has helpers like the one on the below. You can select range of columns by using `:`
 
 ```{r, warning=FALSE, message=FALSE}
-  select(coffee_ratings, 1:4, 21:34) 
+select(coffee_ratings, 1:4, 21:34) 
 ```
 
 
@@ -89,20 +92,26 @@ filter(coffee_ratings, number_of_bags >= 60)
 Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
 
 ```{r, eval=TRUE, echo=TRUE}
-  arrange(coffee_ratings, total_cup_points)
+arrange(coffee_ratings, total_cup_points)
 ```
 
 If we want to order it by descending order of total_cup_points, we can use this syntax.
 ```{r, eval=TRUE, echo=TRUE}
-  arrange(coffee_ratings, desc(total_cup_points))
+arrange(coffee_ratings, desc(total_cup_points))
 ```
 
 ## Steps
 
 ```{r, eval=FALSE}
-coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
-coffee_ratings_ethiopia <- filter(coffee_ratings_ethiopia, country_of_origin == "Ethiopia")
-coffee_ratings_ethiopia <- arrange(coffee_ratings_ethiopia, total_cup_points)
+coffee_ratings_ethiopia <- 
+  select(coffee_ratings, total_cup_points, species, country_of_origin)
+
+coffee_ratings_ethiopia <- 
+  filter(coffee_ratings_ethiopia, country_of_origin == "Ethiopia")
+
+coffee_ratings_ethiopia <- 
+  arrange(coffee_ratings_ethiopia, total_cup_points)
+
 coffee_ratings_ethiopia
 ```
 
@@ -181,7 +190,8 @@ coffee_ratings %>%
   group_by(country_of_origin) %>%
   summarise(avg_rating = mean(total_cup_points),
             median_rating = median(total_cup_points)
-            )
+            ) %>% 
+  head()
 ```
 
 ## *Mutate:* We need a new column!
@@ -194,7 +204,8 @@ We didn't have `is_processing_method_full` before but we create it by using `pro
 ```{r, eval=TRUE, echo = TRUE}
 coffee_ratings %>% 
   select(species, country_of_origin, processing_method) %>% 
-  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) 
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) %>% 
+  head()
     
 ```
 
