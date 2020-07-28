@@ -2,14 +2,18 @@
 title: "Week 2: Intro to Data Wrangling with dplyr"
 author: "Hazel KAVILI"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    theme: flatly
 ---
 
 ## Install Libraries
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
 Today we'll focus on `dplyr`, a package that transforms data. dplyr implements a grammar for transforming tabular data.
 
-```{r, warning=FALSE, message=FALSE, echo=TRUE}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 ```
 
