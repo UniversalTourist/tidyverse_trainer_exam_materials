@@ -412,7 +412,8 @@ summary {
 
 <div id="install-libraries" class="section level2">
 <h2>Install Libraries</h2>
-<p>We’ll load the packages with <code>library(tidyverse)</code> instead of loading the core packages one by one. Today we’ll focus on <code>dplyr</code>, a package that transforms data. dplyr implements a grammar for transforming tabular data.</p>
+<p>We’ll load the packages with <code>library(tidyverse)</code> instead of loading the core packages one by one. Today we’ll focus on <code>dplyr</code>, a package that transforms data. <code>dplyr</code> implements a grammar for transforming tabular data.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
 </div>
 <div id="load-data-into-r" class="section level2">
 <h2>Load Data Into R</h2>
@@ -453,29 +454,66 @@ summary {
 </div>
 <div id="comparison-with-base-r-and-tidyverse" class="section level2">
 <h2>Comparison with base R and Tidyverse</h2>
-<p>Before moving into dplyr verbs, I’d like to show you a comparison of base R and tidyverse syntax. The two code chunks are doing the same thing: selecting two columns from our dataframe.</p>
+<p>Before moving into dplyr verbs, I’d like to show you a comparison of base R and tidyverse syntax.</p>
+<p>The two code chunks are doing the same thing: selecting two columns from our dataframe.</p>
 <pre class="r"><code>coffee_ratings[ , c('species', 'country_of_origin')]</code></pre>
-<pre class="r"><code>  select(coffee_ratings, species, country_of_origin)</code></pre>
+<p>While the base R syntax achieves the same end, the dplyr approach provides a more expressive syntax that is easier to read and write.</p>
+<pre class="r"><code>select(coffee_ratings, species, country_of_origin)</code></pre>
 </div>
 <div id="select-choosing-is-not-losing" class="section level2">
 <h2><em>Select:</em> Choosing is not losing!</h2>
-<p>We are moving to our first dplyr verb. <code>select</code> helps us select the variables we want to use or we need for our analysis.</p>
-<pre class="r"><code> select(coffee_ratings, species, country_of_origin, color, certification_body) </code></pre>
-<pre><code>## # A tibble: 1,339 x 4
-##    species country_of_origin color        certification_body                
-##    &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;        &lt;chr&gt;                             
-##  1 Arabica Ethiopia          Green        METAD Agricultural Development plc
-##  2 Arabica Ethiopia          Green        METAD Agricultural Development plc
-##  3 Arabica Guatemala         &lt;NA&gt;         Specialty Coffee Association      
-##  4 Arabica Ethiopia          Green        METAD Agricultural Development plc
-##  5 Arabica Ethiopia          Green        METAD Agricultural Development plc
-##  6 Arabica Brazil            Bluish-Green Specialty Coffee Institute of Asia
-##  7 Arabica Peru              Bluish-Green Specialty Coffee Institute of Asia
-##  8 Arabica Ethiopia          &lt;NA&gt;         Ethiopia Commodity Exchange       
-##  9 Arabica Ethiopia          &lt;NA&gt;         Ethiopia Commodity Exchange       
-## 10 Arabica Ethiopia          Green        METAD Agricultural Development plc
-## # … with 1,329 more rows</code></pre>
+<p>We are moving to our first dplyr verb. <code>select</code> helps us select the columns/variables of interest from our data frame.</p>
+<pre class="r"><code> select(coffee_ratings, species, country_of_origin, color, certification_body)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">species</th>
+<th align="left">country_of_origin</th>
+<th align="left">color</th>
+<th align="left">certification_body</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Arabica</td>
+<td align="left">Ethiopia</td>
+<td align="left">Green</td>
+<td align="left">METAD Agricultural Development plc</td>
+</tr>
+<tr class="even">
+<td align="left">Arabica</td>
+<td align="left">Ethiopia</td>
+<td align="left">Green</td>
+<td align="left">METAD Agricultural Development plc</td>
+</tr>
+<tr class="odd">
+<td align="left">Arabica</td>
+<td align="left">Guatemala</td>
+<td align="left">NA</td>
+<td align="left">Specialty Coffee Association</td>
+</tr>
+<tr class="even">
+<td align="left">Arabica</td>
+<td align="left">Ethiopia</td>
+<td align="left">Green</td>
+<td align="left">METAD Agricultural Development plc</td>
+</tr>
+<tr class="odd">
+<td align="left">Arabica</td>
+<td align="left">Ethiopia</td>
+<td align="left">Green</td>
+<td align="left">METAD Agricultural Development plc</td>
+</tr>
+<tr class="even">
+<td align="left">Arabica</td>
+<td align="left">Brazil</td>
+<td align="left">Bluish-Green</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+</tr>
+</tbody>
+</table>
 <p><code>select</code> has helpers like the one on the below. You can select range of columns by using <code>:</code></p>
+<pre class="r"><code>select(coffee_ratings, 1:4, 21:34) </code></pre>
 <pre><code>## # A tibble: 1,339 x 18
 ##    total_cup_points species owner country_of_orig… aroma flavor aftertaste
 ##               &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
@@ -493,122 +531,1662 @@ summary {
 ## #   balance &lt;dbl&gt;, uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;,
 ## #   cupper_points &lt;dbl&gt;, moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;,
 ## #   quakers &lt;dbl&gt;, color &lt;chr&gt;</code></pre>
+<table>
+<colgroup>
+<col width="8%"></col>
+<col width="3%"></col>
+<col width="11%"></col>
+<col width="8%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="5%"></col>
+<col width="3%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="5%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="6%"></col>
+<col width="4%"></col>
+<col width="10%"></col>
+<col width="3%"></col>
+<col width="6%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">total_cup_points</th>
+<th align="left">species</th>
+<th align="left">owner</th>
+<th align="left">country_of_origin</th>
+<th align="right">aroma</th>
+<th align="right">flavor</th>
+<th align="right">aftertaste</th>
+<th align="right">acidity</th>
+<th align="right">body</th>
+<th align="right">balance</th>
+<th align="right">uniformity</th>
+<th align="right">clean_cup</th>
+<th align="right">sweetness</th>
+<th align="right">cupper_points</th>
+<th align="right">moisture</th>
+<th align="right">category_one_defects</th>
+<th align="right">quakers</th>
+<th align="left">color</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">90.58</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="right">8.67</td>
+<td align="right">8.83</td>
+<td align="right">8.67</td>
+<td align="right">8.75</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.75</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+</tr>
+<tr class="even">
+<td align="right">89.92</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="right">8.75</td>
+<td align="right">8.67</td>
+<td align="right">8.50</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+</tr>
+<tr class="odd">
+<td align="right">89.75</td>
+<td align="left">Arabica</td>
+<td align="left">grounds for health admin</td>
+<td align="left">Guatemala</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">9.25</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="right">89.00</td>
+<td align="left">Arabica</td>
+<td align="left">yidnekachew dabessa</td>
+<td align="left">Ethiopia</td>
+<td align="right">8.17</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.67</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+</tr>
+<tr class="odd">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+</tr>
+<tr class="even">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">ji-ae ahn</td>
+<td align="left">Brazil</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.33</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Bluish-Green</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="filter-do-we-want-everything" class="section level2">
 <h2><em>Filter:</em> Do we want everything?</h2>
 <p><code>filter</code> helps us to extract rows that meet logical criteria. Let’s say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is <code>filter</code> our dataset by using necessary column and value:</p>
 <pre class="r"><code>filter(coffee_ratings, country_of_origin == &quot;Ethiopia&quot;)</code></pre>
-<pre><code>## # A tibble: 44 x 43
-##    total_cup_points species owner country_of_orig… farm_name lot_number mill 
-##               &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
-##  1             90.6 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  2             89.9 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  3             89   Arabica yidn… Ethiopia         yidnekac… &lt;NA&gt;       wole…
-##  4             88.8 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  5             88.7 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-##  6             88.4 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-##  7             88.2 Arabica diam… Ethiopia         tulla co… &lt;NA&gt;       tull…
-##  8             88.1 Arabica moha… Ethiopia         fahem co… &lt;NA&gt;       &lt;NA&gt; 
-##  9             87.8 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-## 10             87.3 Arabica ethi… Ethiopia         &lt;NA&gt;      &lt;NA&gt;       &lt;NA&gt; 
-## # … with 34 more rows, and 36 more variables: ico_number &lt;chr&gt;, company &lt;chr&gt;,
-## #   altitude &lt;chr&gt;, region &lt;chr&gt;, producer &lt;chr&gt;, number_of_bags &lt;dbl&gt;,
-## #   bag_weight &lt;chr&gt;, in_country_partner &lt;chr&gt;, harvest_year &lt;chr&gt;,
-## #   grading_date &lt;chr&gt;, owner_1 &lt;chr&gt;, variety &lt;chr&gt;, processing_method &lt;chr&gt;,
-## #   aroma &lt;dbl&gt;, flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;, acidity &lt;dbl&gt;, body &lt;dbl&gt;,
-## #   balance &lt;dbl&gt;, uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;,
-## #   cupper_points &lt;dbl&gt;, moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;,
-## #   quakers &lt;dbl&gt;, color &lt;chr&gt;, category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;,
-## #   certification_body &lt;chr&gt;, certification_address &lt;chr&gt;,
-## #   certification_contact &lt;chr&gt;, unit_of_measurement &lt;chr&gt;,
-## #   altitude_low_meters &lt;dbl&gt;, altitude_high_meters &lt;dbl&gt;,
-## #   altitude_mean_meters &lt;dbl&gt;</code></pre>
+<table>
+<colgroup>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="3%"></col>
+<col width="2%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="5%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="0%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="4%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">total_cup_points</th>
+<th align="left">species</th>
+<th align="left">owner</th>
+<th align="left">country_of_origin</th>
+<th align="left">farm_name</th>
+<th align="left">lot_number</th>
+<th align="left">mill</th>
+<th align="left">ico_number</th>
+<th align="left">company</th>
+<th align="left">altitude</th>
+<th align="left">region</th>
+<th align="left">producer</th>
+<th align="right">number_of_bags</th>
+<th align="left">bag_weight</th>
+<th align="left">in_country_partner</th>
+<th align="left">harvest_year</th>
+<th align="left">grading_date</th>
+<th align="left">owner_1</th>
+<th align="left">variety</th>
+<th align="left">processing_method</th>
+<th align="right">aroma</th>
+<th align="right">flavor</th>
+<th align="right">aftertaste</th>
+<th align="right">acidity</th>
+<th align="right">body</th>
+<th align="right">balance</th>
+<th align="right">uniformity</th>
+<th align="right">clean_cup</th>
+<th align="right">sweetness</th>
+<th align="right">cupper_points</th>
+<th align="right">moisture</th>
+<th align="right">category_one_defects</th>
+<th align="right">quakers</th>
+<th align="left">color</th>
+<th align="right">category_two_defects</th>
+<th align="left">expiration</th>
+<th align="left">certification_body</th>
+<th align="left">certification_address</th>
+<th align="left">certification_contact</th>
+<th align="left">unit_of_measurement</th>
+<th align="right">altitude_low_meters</th>
+<th align="right">altitude_high_meters</th>
+<th align="right">altitude_mean_meters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">90.58</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.67</td>
+<td align="right">8.83</td>
+<td align="right">8.67</td>
+<td align="right">8.75</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">10.00</td>
+<td align="right">10</td>
+<td align="right">10.00</td>
+<td align="right">8.75</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">0</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="even">
+<td align="right">89.92</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.75</td>
+<td align="right">8.67</td>
+<td align="right">8.50</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">10.00</td>
+<td align="right">10</td>
+<td align="right">10.00</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">1</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="odd">
+<td align="right">89.00</td>
+<td align="left">Arabica</td>
+<td align="left">yidnekachew dabessa</td>
+<td align="left">Ethiopia</td>
+<td align="left">yidnekachew dabessa coffee plantation</td>
+<td align="left">NA</td>
+<td align="left">wolensu</td>
+<td align="left">NA</td>
+<td align="left">yidnekachew debessa coffee plantation</td>
+<td align="left">1800-2200</td>
+<td align="left">oromia</td>
+<td align="left">Yidnekachew Dabessa Coffee Plantation</td>
+<td align="right">320</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">March 26th, 2015</td>
+<td align="left">Yidnekachew Dabessa</td>
+<td align="left">NA</td>
+<td align="left">Natural / Dry</td>
+<td align="right">8.17</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">10.00</td>
+<td align="right">10</td>
+<td align="right">10.00</td>
+<td align="right">8.67</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">March 25th, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1800</td>
+<td align="right">2200</td>
+<td align="right">2000</td>
+</tr>
+<tr class="even">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">10.00</td>
+<td align="right">10</td>
+<td align="right">10.00</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="odd">
+<td align="right">88.67</td>
+<td align="left">Arabica</td>
+<td align="left">ethiopia commodity exchange</td>
+<td align="left">Ethiopia</td>
+<td align="left">aolme</td>
+<td align="left">NA</td>
+<td align="left">c.p.w.e</td>
+<td align="left">010/0338</td>
+<td align="left">NA</td>
+<td align="left">1570-1700</td>
+<td align="left">oromia</td>
+<td align="left">Bazen Agricultural &amp; Industrial Dev’t Plc</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">March 2010</td>
+<td align="left">September 2nd, 2010</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">8.25</td>
+<td align="right">8.33</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">8.50</td>
+<td align="right">10.00</td>
+<td align="right">10</td>
+<td align="right">9.33</td>
+<td align="right">9.00</td>
+<td align="right">0.03</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">NA</td>
+<td align="right">0</td>
+<td align="left">September 2nd, 2011</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">a176532400aebdc345cf3d870f84ed3ecab6249e</td>
+<td align="left">61bbaf6a9f341e5782b8e7bd3ebf76aac89fe24b</td>
+<td align="left">m</td>
+<td align="right">1570</td>
+<td align="right">1700</td>
+<td align="right">1635</td>
+</tr>
+<tr class="even">
+<td align="right">88.42</td>
+<td align="left">Arabica</td>
+<td align="left">ethiopia commodity exchange</td>
+<td align="left">Ethiopia</td>
+<td align="left">aolme</td>
+<td align="left">NA</td>
+<td align="left">c.p.w.e</td>
+<td align="left">010/0338</td>
+<td align="left">NA</td>
+<td align="left">1570-1700</td>
+<td align="left">oromiya</td>
+<td align="left">Bazen Agricultural &amp; Industrial Dev’t Plc</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">March 2010</td>
+<td align="left">September 2nd, 2010</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">8.67</td>
+<td align="right">8.67</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">8.42</td>
+<td align="right">9.33</td>
+<td align="right">10</td>
+<td align="right">9.33</td>
+<td align="right">8.67</td>
+<td align="right">0.03</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">NA</td>
+<td align="right">0</td>
+<td align="left">September 2nd, 2011</td>
+<td align="left">Ethiopia Commodity Exchange</td>
+<td align="left">a176532400aebdc345cf3d870f84ed3ecab6249e</td>
+<td align="left">61bbaf6a9f341e5782b8e7bd3ebf76aac89fe24b</td>
+<td align="left">m</td>
+<td align="right">1570</td>
+<td align="right">1700</td>
+<td align="right">1635</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>filter(coffee_ratings, number_of_bags &gt;= 60)</code></pre>
-<pre><code>## # A tibble: 789 x 43
-##    total_cup_points species owner country_of_orig… farm_name lot_number mill 
-##               &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
-##  1             90.6 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  2             89.9 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  3             89   Arabica yidn… Ethiopia         yidnekac… &lt;NA&gt;       wole…
-##  4             88.8 Arabica meta… Ethiopia         metad plc &lt;NA&gt;       meta…
-##  5             88.8 Arabica ji-a… Brazil           &lt;NA&gt;      &lt;NA&gt;       &lt;NA&gt; 
-##  6             88.8 Arabica hugo… Peru             &lt;NA&gt;      &lt;NA&gt;       hvc  
-##  7             88.7 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-##  8             88.4 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-##  9             88.1 Arabica moha… Ethiopia         fahem co… &lt;NA&gt;       &lt;NA&gt; 
-## 10             87.8 Arabica ethi… Ethiopia         aolme     &lt;NA&gt;       c.p.…
-## # … with 779 more rows, and 36 more variables: ico_number &lt;chr&gt;, company &lt;chr&gt;,
-## #   altitude &lt;chr&gt;, region &lt;chr&gt;, producer &lt;chr&gt;, number_of_bags &lt;dbl&gt;,
-## #   bag_weight &lt;chr&gt;, in_country_partner &lt;chr&gt;, harvest_year &lt;chr&gt;,
-## #   grading_date &lt;chr&gt;, owner_1 &lt;chr&gt;, variety &lt;chr&gt;, processing_method &lt;chr&gt;,
-## #   aroma &lt;dbl&gt;, flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;, acidity &lt;dbl&gt;, body &lt;dbl&gt;,
-## #   balance &lt;dbl&gt;, uniformity &lt;dbl&gt;, clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;,
-## #   cupper_points &lt;dbl&gt;, moisture &lt;dbl&gt;, category_one_defects &lt;dbl&gt;,
-## #   quakers &lt;dbl&gt;, color &lt;chr&gt;, category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;,
-## #   certification_body &lt;chr&gt;, certification_address &lt;chr&gt;,
-## #   certification_contact &lt;chr&gt;, unit_of_measurement &lt;chr&gt;,
-## #   altitude_low_meters &lt;dbl&gt;, altitude_high_meters &lt;dbl&gt;,
-## #   altitude_mean_meters &lt;dbl&gt;</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="5%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="5%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="5%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="4%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">total_cup_points</th>
+<th align="left">species</th>
+<th align="left">owner</th>
+<th align="left">country_of_origin</th>
+<th align="left">farm_name</th>
+<th align="left">lot_number</th>
+<th align="left">mill</th>
+<th align="left">ico_number</th>
+<th align="left">company</th>
+<th align="left">altitude</th>
+<th align="left">region</th>
+<th align="left">producer</th>
+<th align="right">number_of_bags</th>
+<th align="left">bag_weight</th>
+<th align="left">in_country_partner</th>
+<th align="left">harvest_year</th>
+<th align="left">grading_date</th>
+<th align="left">owner_1</th>
+<th align="left">variety</th>
+<th align="left">processing_method</th>
+<th align="right">aroma</th>
+<th align="right">flavor</th>
+<th align="right">aftertaste</th>
+<th align="right">acidity</th>
+<th align="right">body</th>
+<th align="right">balance</th>
+<th align="right">uniformity</th>
+<th align="right">clean_cup</th>
+<th align="right">sweetness</th>
+<th align="right">cupper_points</th>
+<th align="right">moisture</th>
+<th align="right">category_one_defects</th>
+<th align="right">quakers</th>
+<th align="left">color</th>
+<th align="right">category_two_defects</th>
+<th align="left">expiration</th>
+<th align="left">certification_body</th>
+<th align="left">certification_address</th>
+<th align="left">certification_contact</th>
+<th align="left">unit_of_measurement</th>
+<th align="right">altitude_low_meters</th>
+<th align="right">altitude_high_meters</th>
+<th align="right">altitude_mean_meters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">90.58</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.67</td>
+<td align="right">8.83</td>
+<td align="right">8.67</td>
+<td align="right">8.75</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.75</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">0</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="even">
+<td align="right">89.92</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.75</td>
+<td align="right">8.67</td>
+<td align="right">8.50</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">1</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="odd">
+<td align="right">89.00</td>
+<td align="left">Arabica</td>
+<td align="left">yidnekachew dabessa</td>
+<td align="left">Ethiopia</td>
+<td align="left">yidnekachew dabessa coffee plantation</td>
+<td align="left">NA</td>
+<td align="left">wolensu</td>
+<td align="left">NA</td>
+<td align="left">yidnekachew debessa coffee plantation</td>
+<td align="left">1800-2200</td>
+<td align="left">oromia</td>
+<td align="left">Yidnekachew Dabessa Coffee Plantation</td>
+<td align="right">320</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">March 26th, 2015</td>
+<td align="left">Yidnekachew Dabessa</td>
+<td align="left">NA</td>
+<td align="left">Natural / Dry</td>
+<td align="right">8.17</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.67</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">March 25th, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1800</td>
+<td align="right">2200</td>
+<td align="right">2000</td>
+</tr>
+<tr class="even">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="odd">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">ji-ae ahn</td>
+<td align="left">Brazil</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">100</td>
+<td align="left">30 kg</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">2013</td>
+<td align="left">September 3rd, 2013</td>
+<td align="left">Ji-Ae Ahn</td>
+<td align="left">NA</td>
+<td align="left">Natural / Dry</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.33</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Bluish-Green</td>
+<td align="right">1</td>
+<td align="left">September 3rd, 2014</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">726e4891cf2c9a4848768bd34b668124d12c4224</td>
+<td align="left">b70da261fcc84831e3e9620c30a8701540abc200</td>
+<td align="left">m</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">88.75</td>
+<td align="left">Arabica</td>
+<td align="left">hugo valdivia</td>
+<td align="left">Peru</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">hvc</td>
+<td align="left">NA</td>
+<td align="left">richmond investment-coffee department</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">HVC</td>
+<td align="right">100</td>
+<td align="left">69 kg</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">2012</td>
+<td align="left">September 17th, 2012</td>
+<td align="left">Hugo Valdivia</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.33</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.25</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.50</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Bluish-Green</td>
+<td align="right">0</td>
+<td align="left">September 17th, 2013</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">726e4891cf2c9a4848768bd34b668124d12c4224</td>
+<td align="left">b70da261fcc84831e3e9620c30a8701540abc200</td>
+<td align="left">m</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="arrange-lets-bring-some-order-to-data" class="section level2">
 <h2><em>Arrange:</em> Let’s bring some order to data!</h2>
 <p><code>arrange</code> order rows from smallest to largest values. Let’s say we want to look at our data frame arranged by <code>total_cup_points</code>. In default, your dataset will be arranged bu ascending order.</p>
-<pre class="r"><code>  arrange(coffee_ratings, total_cup_points)</code></pre>
-<pre><code>## # A tibble: 1,339 x 43
-##    total_cup_points species owner country_of_orig… farm_name lot_number mill 
-##               &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
-##  1              0   Arabica bism… Honduras         los hica… 103        cigr…
-##  2             59.8 Arabica juan… Guatemala        finca el… &lt;NA&gt;       bene…
-##  3             63.1 Arabica expo… Nicaragua        finca la… 017-053-0… bene…
-##  4             67.9 Arabica myri… Haiti            200 farms &lt;NA&gt;       coeb…
-##  5             68.3 Arabica juan… Mexico           el cente… &lt;NA&gt;       la e…
-##  6             69.2 Arabica cade… Honduras         cerro bu… &lt;NA&gt;       cade…
-##  7             69.2 Arabica cade… Honduras         cerro bu… &lt;NA&gt;       cade…
-##  8             69.3 Arabica cade… Honduras         cerro bu… &lt;NA&gt;       cade…
-##  9             70.7 Arabica volc… Brazil           &lt;NA&gt;      2017/2018… copag
-## 10             70.8 Arabica kurt… Mexico           various   &lt;NA&gt;       f.i.…
-## # … with 1,329 more rows, and 36 more variables: ico_number &lt;chr&gt;,
-## #   company &lt;chr&gt;, altitude &lt;chr&gt;, region &lt;chr&gt;, producer &lt;chr&gt;,
-## #   number_of_bags &lt;dbl&gt;, bag_weight &lt;chr&gt;, in_country_partner &lt;chr&gt;,
-## #   harvest_year &lt;chr&gt;, grading_date &lt;chr&gt;, owner_1 &lt;chr&gt;, variety &lt;chr&gt;,
-## #   processing_method &lt;chr&gt;, aroma &lt;dbl&gt;, flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;,
-## #   acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;, uniformity &lt;dbl&gt;,
-## #   clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;, moisture &lt;dbl&gt;,
-## #   category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;,
-## #   category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;, certification_body &lt;chr&gt;,
-## #   certification_address &lt;chr&gt;, certification_contact &lt;chr&gt;,
-## #   unit_of_measurement &lt;chr&gt;, altitude_low_meters &lt;dbl&gt;,
-## #   altitude_high_meters &lt;dbl&gt;, altitude_mean_meters &lt;dbl&gt;</code></pre>
+<pre class="r"><code>arrange(coffee_ratings, total_cup_points)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="3%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="6%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="1%"></col>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="3%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="0%"></col>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">total_cup_points</th>
+<th align="left">species</th>
+<th align="left">owner</th>
+<th align="left">country_of_origin</th>
+<th align="left">farm_name</th>
+<th align="left">lot_number</th>
+<th align="left">mill</th>
+<th align="left">ico_number</th>
+<th align="left">company</th>
+<th align="left">altitude</th>
+<th align="left">region</th>
+<th align="left">producer</th>
+<th align="right">number_of_bags</th>
+<th align="left">bag_weight</th>
+<th align="left">in_country_partner</th>
+<th align="left">harvest_year</th>
+<th align="left">grading_date</th>
+<th align="left">owner_1</th>
+<th align="left">variety</th>
+<th align="left">processing_method</th>
+<th align="right">aroma</th>
+<th align="right">flavor</th>
+<th align="right">aftertaste</th>
+<th align="right">acidity</th>
+<th align="right">body</th>
+<th align="right">balance</th>
+<th align="right">uniformity</th>
+<th align="right">clean_cup</th>
+<th align="right">sweetness</th>
+<th align="right">cupper_points</th>
+<th align="right">moisture</th>
+<th align="right">category_one_defects</th>
+<th align="right">quakers</th>
+<th align="left">color</th>
+<th align="right">category_two_defects</th>
+<th align="left">expiration</th>
+<th align="left">certification_body</th>
+<th align="left">certification_address</th>
+<th align="left">certification_contact</th>
+<th align="left">unit_of_measurement</th>
+<th align="right">altitude_low_meters</th>
+<th align="right">altitude_high_meters</th>
+<th align="right">altitude_mean_meters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.00</td>
+<td align="left">Arabica</td>
+<td align="left">bismarck castro</td>
+<td align="left">Honduras</td>
+<td align="left">los hicaques</td>
+<td align="left">103</td>
+<td align="left">cigrah s.a de c.v.</td>
+<td align="left">13-111-053</td>
+<td align="left">cigrah s.a de c.v</td>
+<td align="left">1400</td>
+<td align="left">comayagua</td>
+<td align="left">Reinerio Zepeda</td>
+<td align="right">275</td>
+<td align="left">69 kg</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">2017</td>
+<td align="left">April 28th, 2017</td>
+<td align="left">Bismarck Castro</td>
+<td align="left">Caturra</td>
+<td align="left">NA</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">April 28th, 2018</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">b4660a57e9f8cc613ae5b8f02bfce8634c763ab4</td>
+<td align="left">7f521ca403540f81ec99daec7da19c2788393880</td>
+<td align="left">m</td>
+<td align="right">1400.00</td>
+<td align="right">1400.00</td>
+<td align="right">1400.00</td>
+</tr>
+<tr class="even">
+<td align="right">59.83</td>
+<td align="left">Arabica</td>
+<td align="left">juan luis alvarado romero</td>
+<td align="left">Guatemala</td>
+<td align="left">finca el limon</td>
+<td align="left">NA</td>
+<td align="left">beneficio serben</td>
+<td align="left">11/853/165</td>
+<td align="left">unicafe</td>
+<td align="left">4650</td>
+<td align="left">nuevo oriente</td>
+<td align="left">WILLIAM ESTUARDO MARTINEZ PACHECO</td>
+<td align="right">275</td>
+<td align="left">1 kg</td>
+<td align="left">Asociacion Nacional Del Café</td>
+<td align="left">2012</td>
+<td align="left">May 24th, 2012</td>
+<td align="left">Juan Luis Alvarado Romero</td>
+<td align="left">Catuai</td>
+<td align="left">Washed / Wet</td>
+<td align="right">7.50</td>
+<td align="right">6.67</td>
+<td align="right">6.67</td>
+<td align="right">7.67</td>
+<td align="right">7.33</td>
+<td align="right">6.67</td>
+<td align="right">8.00</td>
+<td align="right">1.33</td>
+<td align="right">1.33</td>
+<td align="right">6.67</td>
+<td align="right">0.10</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">4</td>
+<td align="left">May 24th, 2013</td>
+<td align="left">Asociacion Nacional Del Café</td>
+<td align="left">b1f20fe3a819fd6b2ee0eb8fdc3da256604f1e53</td>
+<td align="left">724f04ad10ed31dbb9d260f0dfd221ba48be8a95</td>
+<td align="left">ft</td>
+<td align="right">1417.32</td>
+<td align="right">1417.32</td>
+<td align="right">1417.32</td>
+</tr>
+<tr class="odd">
+<td align="right">63.08</td>
+<td align="left">Arabica</td>
+<td align="left">exportadora atlantic, s.a.</td>
+<td align="left">Nicaragua</td>
+<td align="left">finca las marías</td>
+<td align="left">017-053-0211/ 017-053-0212</td>
+<td align="left">beneficio atlantic condega</td>
+<td align="left">017-053-0211/ 017-053-0212</td>
+<td align="left">exportadora atlantic s.a</td>
+<td align="left">1100</td>
+<td align="left">jalapa</td>
+<td align="left">Teófilo Narváez</td>
+<td align="right">550</td>
+<td align="left">69 kg</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">2016</td>
+<td align="left">June 6th, 2017</td>
+<td align="left">Exportadora Atlantic, S.A.</td>
+<td align="left">Caturra</td>
+<td align="left">Other</td>
+<td align="right">7.25</td>
+<td align="right">6.58</td>
+<td align="right">6.33</td>
+<td align="right">6.25</td>
+<td align="right">6.42</td>
+<td align="right">6.08</td>
+<td align="right">6.00</td>
+<td align="right">6.00</td>
+<td align="right">6.00</td>
+<td align="right">6.17</td>
+<td align="right">0.13</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">5</td>
+<td align="left">June 6th, 2018</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">b4660a57e9f8cc613ae5b8f02bfce8634c763ab4</td>
+<td align="left">7f521ca403540f81ec99daec7da19c2788393880</td>
+<td align="left">m</td>
+<td align="right">1100.00</td>
+<td align="right">1100.00</td>
+<td align="right">1100.00</td>
+</tr>
+<tr class="even">
+<td align="right">67.92</td>
+<td align="left">Arabica</td>
+<td align="left">myriam kaplan-pasternak</td>
+<td align="left">Haiti</td>
+<td align="left">200 farms</td>
+<td align="left">NA</td>
+<td align="left">coeb koperativ ekselsyo basen (350 members)</td>
+<td align="left">NA</td>
+<td align="left">haiti coffee</td>
+<td align="left">~350m</td>
+<td align="left">department d’artibonite , haiti</td>
+<td align="left">COEB Koperativ Ekselsyo Basen</td>
+<td align="right">1</td>
+<td align="left">2 kg</td>
+<td align="left">Specialty Coffee Association</td>
+<td align="left">2012</td>
+<td align="left">May 24th, 2012</td>
+<td align="left">Myriam Kaplan-Pasternak</td>
+<td align="left">Typica</td>
+<td align="left">Natural / Dry</td>
+<td align="right">6.75</td>
+<td align="right">6.58</td>
+<td align="right">6.42</td>
+<td align="right">6.67</td>
+<td align="right">7.08</td>
+<td align="right">6.67</td>
+<td align="right">9.33</td>
+<td align="right">6.00</td>
+<td align="right">6.00</td>
+<td align="right">6.42</td>
+<td align="right">0.14</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="left">Blue-Green</td>
+<td align="right">16</td>
+<td align="left">May 24th, 2013</td>
+<td align="left">Specialty Coffee Association</td>
+<td align="left">36d0d00a3724338ba7937c52a378d085f2172daa</td>
+<td align="left">0878a7d4b9d35ddbf0fe2ce69a2062cceb45a660</td>
+<td align="left">m</td>
+<td align="right">350.00</td>
+<td align="right">350.00</td>
+<td align="right">350.00</td>
+</tr>
+<tr class="odd">
+<td align="right">68.33</td>
+<td align="left">Arabica</td>
+<td align="left">juan carlos garcia lopez</td>
+<td align="left">Mexico</td>
+<td align="left">el centenario</td>
+<td align="left">NA</td>
+<td align="left">la esperanza, municipio juchique de ferrer, veracruz</td>
+<td align="left">1104328663</td>
+<td align="left">terra mia</td>
+<td align="left">900</td>
+<td align="left">juchique de ferrer</td>
+<td align="left">JUAN CARLOS GARCÍA LOPEZ</td>
+<td align="right">12</td>
+<td align="left">1 kg</td>
+<td align="left">AMECAFE</td>
+<td align="left">2012</td>
+<td align="left">September 17th, 2012</td>
+<td align="left">JUAN CARLOS GARCIA LOPEZ</td>
+<td align="left">Bourbon</td>
+<td align="left">Washed / Wet</td>
+<td align="right">7.08</td>
+<td align="right">6.83</td>
+<td align="right">6.25</td>
+<td align="right">7.42</td>
+<td align="right">7.25</td>
+<td align="right">6.75</td>
+<td align="right">10.00</td>
+<td align="right">0.00</td>
+<td align="right">10.00</td>
+<td align="right">6.75</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">None</td>
+<td align="right">20</td>
+<td align="left">September 17th, 2013</td>
+<td align="left">AMECAFE</td>
+<td align="left">59e396ad6e22a1c22b248f958e1da2bd8af85272</td>
+<td align="left">0eb4ee5b3f47b20b049548a2fd1e7d4a2b70d0a7</td>
+<td align="left">m</td>
+<td align="right">900.00</td>
+<td align="right">900.00</td>
+<td align="right">900.00</td>
+</tr>
+<tr class="even">
+<td align="right">69.17</td>
+<td align="left">Arabica</td>
+<td align="left">cadexsa</td>
+<td align="left">Honduras</td>
+<td align="left">cerro bueno</td>
+<td align="left">NA</td>
+<td align="left">cadexsa</td>
+<td align="left">13-63-174</td>
+<td align="left">cadexsa</td>
+<td align="left">1450 msnm</td>
+<td align="left">marcala</td>
+<td align="left">Omar Acosta</td>
+<td align="right">275</td>
+<td align="left">1 kg</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">2014</td>
+<td align="left">May 15th, 2014</td>
+<td align="left">CADEXSA</td>
+<td align="left">Catuai</td>
+<td align="left">Washed / Wet</td>
+<td align="right">7.00</td>
+<td align="right">6.17</td>
+<td align="right">6.17</td>
+<td align="right">6.67</td>
+<td align="right">6.50</td>
+<td align="right">6.17</td>
+<td align="right">8.00</td>
+<td align="right">8.00</td>
+<td align="right">8.00</td>
+<td align="right">6.50</td>
+<td align="right">0.10</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">3</td>
+<td align="left">May 15th, 2015</td>
+<td align="left">Instituto Hondureño del Café</td>
+<td align="left">b4660a57e9f8cc613ae5b8f02bfce8634c763ab4</td>
+<td align="left">7f521ca403540f81ec99daec7da19c2788393880</td>
+<td align="left">m</td>
+<td align="right">1450.00</td>
+<td align="right">1450.00</td>
+<td align="right">1450.00</td>
+</tr>
+</tbody>
+</table>
 <p>If we want to order it by descending order of total_cup_points, we can use this syntax.</p>
-<pre class="r"><code>  arrange(coffee_ratings, desc(total_cup_points))</code></pre>
-<pre><code>## # A tibble: 1,339 x 43
-##    total_cup_points species owner country_of_orig… farm_name lot_number mill 
-##               &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;
-##  1             90.6 Arabica meta… Ethiopia         &quot;metad p… &lt;NA&gt;       meta…
-##  2             89.9 Arabica meta… Ethiopia         &quot;metad p… &lt;NA&gt;       meta…
-##  3             89.8 Arabica grou… Guatemala        &quot;san mar… &lt;NA&gt;       &lt;NA&gt; 
-##  4             89   Arabica yidn… Ethiopia         &quot;yidneka… &lt;NA&gt;       wole…
-##  5             88.8 Arabica meta… Ethiopia         &quot;metad p… &lt;NA&gt;       meta…
-##  6             88.8 Arabica ji-a… Brazil            &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt; 
-##  7             88.8 Arabica hugo… Peru              &lt;NA&gt;     &lt;NA&gt;       hvc  
-##  8             88.7 Arabica ethi… Ethiopia         &quot;aolme&quot;   &lt;NA&gt;       c.p.…
-##  9             88.4 Arabica ethi… Ethiopia         &quot;aolme&quot;   &lt;NA&gt;       c.p.…
-## 10             88.2 Arabica diam… Ethiopia         &quot;tulla c… &lt;NA&gt;       tull…
-## # … with 1,329 more rows, and 36 more variables: ico_number &lt;chr&gt;,
-## #   company &lt;chr&gt;, altitude &lt;chr&gt;, region &lt;chr&gt;, producer &lt;chr&gt;,
-## #   number_of_bags &lt;dbl&gt;, bag_weight &lt;chr&gt;, in_country_partner &lt;chr&gt;,
-## #   harvest_year &lt;chr&gt;, grading_date &lt;chr&gt;, owner_1 &lt;chr&gt;, variety &lt;chr&gt;,
-## #   processing_method &lt;chr&gt;, aroma &lt;dbl&gt;, flavor &lt;dbl&gt;, aftertaste &lt;dbl&gt;,
-## #   acidity &lt;dbl&gt;, body &lt;dbl&gt;, balance &lt;dbl&gt;, uniformity &lt;dbl&gt;,
-## #   clean_cup &lt;dbl&gt;, sweetness &lt;dbl&gt;, cupper_points &lt;dbl&gt;, moisture &lt;dbl&gt;,
-## #   category_one_defects &lt;dbl&gt;, quakers &lt;dbl&gt;, color &lt;chr&gt;,
-## #   category_two_defects &lt;dbl&gt;, expiration &lt;chr&gt;, certification_body &lt;chr&gt;,
-## #   certification_address &lt;chr&gt;, certification_contact &lt;chr&gt;,
-## #   unit_of_measurement &lt;chr&gt;, altitude_low_meters &lt;dbl&gt;,
-## #   altitude_high_meters &lt;dbl&gt;, altitude_mean_meters &lt;dbl&gt;</code></pre>
+<pre class="r"><code>arrange(coffee_ratings, desc(total_cup_points))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="3%"></col>
+<col width="2%"></col>
+<col width="5%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="4%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="3%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="0%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="0%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="4%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">total_cup_points</th>
+<th align="left">species</th>
+<th align="left">owner</th>
+<th align="left">country_of_origin</th>
+<th align="left">farm_name</th>
+<th align="left">lot_number</th>
+<th align="left">mill</th>
+<th align="left">ico_number</th>
+<th align="left">company</th>
+<th align="left">altitude</th>
+<th align="left">region</th>
+<th align="left">producer</th>
+<th align="right">number_of_bags</th>
+<th align="left">bag_weight</th>
+<th align="left">in_country_partner</th>
+<th align="left">harvest_year</th>
+<th align="left">grading_date</th>
+<th align="left">owner_1</th>
+<th align="left">variety</th>
+<th align="left">processing_method</th>
+<th align="right">aroma</th>
+<th align="right">flavor</th>
+<th align="right">aftertaste</th>
+<th align="right">acidity</th>
+<th align="right">body</th>
+<th align="right">balance</th>
+<th align="right">uniformity</th>
+<th align="right">clean_cup</th>
+<th align="right">sweetness</th>
+<th align="right">cupper_points</th>
+<th align="right">moisture</th>
+<th align="right">category_one_defects</th>
+<th align="right">quakers</th>
+<th align="left">color</th>
+<th align="right">category_two_defects</th>
+<th align="left">expiration</th>
+<th align="left">certification_body</th>
+<th align="left">certification_address</th>
+<th align="left">certification_contact</th>
+<th align="left">unit_of_measurement</th>
+<th align="right">altitude_low_meters</th>
+<th align="right">altitude_high_meters</th>
+<th align="right">altitude_mean_meters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">90.58</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.67</td>
+<td align="right">8.83</td>
+<td align="right">8.67</td>
+<td align="right">8.75</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.75</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">0</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="even">
+<td align="right">89.92</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.75</td>
+<td align="right">8.67</td>
+<td align="right">8.50</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">1</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="odd">
+<td align="right">89.75</td>
+<td align="left">Arabica</td>
+<td align="left">grounds for health admin</td>
+<td align="left">Guatemala</td>
+<td align="left">san marcos barrancas &quot;san cristobal cuch</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">1600 - 1800 m</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5</td>
+<td align="left">1</td>
+<td align="left">Specialty Coffee Association</td>
+<td align="left">NA</td>
+<td align="left">May 31st, 2010</td>
+<td align="left">Grounds for Health Admin</td>
+<td align="left">Bourbon</td>
+<td align="left">NA</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">8.42</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">9.25</td>
+<td align="right">0.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">NA</td>
+<td align="right">0</td>
+<td align="left">May 31st, 2011</td>
+<td align="left">Specialty Coffee Association</td>
+<td align="left">36d0d00a3724338ba7937c52a378d085f2172daa</td>
+<td align="left">0878a7d4b9d35ddbf0fe2ce69a2062cceb45a660</td>
+<td align="left">m</td>
+<td align="right">1600</td>
+<td align="right">1800</td>
+<td align="right">1700</td>
+</tr>
+<tr class="even">
+<td align="right">89.00</td>
+<td align="left">Arabica</td>
+<td align="left">yidnekachew dabessa</td>
+<td align="left">Ethiopia</td>
+<td align="left">yidnekachew dabessa coffee plantation</td>
+<td align="left">NA</td>
+<td align="left">wolensu</td>
+<td align="left">NA</td>
+<td align="left">yidnekachew debessa coffee plantation</td>
+<td align="left">1800-2200</td>
+<td align="left">oromia</td>
+<td align="left">Yidnekachew Dabessa Coffee Plantation</td>
+<td align="right">320</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">March 26th, 2015</td>
+<td align="left">Yidnekachew Dabessa</td>
+<td align="left">NA</td>
+<td align="left">Natural / Dry</td>
+<td align="right">8.17</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.67</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">March 25th, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1800</td>
+<td align="right">2200</td>
+<td align="right">2000</td>
+</tr>
+<tr class="odd">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">metad plc</td>
+<td align="left">Ethiopia</td>
+<td align="left">metad plc</td>
+<td align="left">NA</td>
+<td align="left">metad plc</td>
+<td align="left">2014/2015</td>
+<td align="left">metad agricultural developmet plc</td>
+<td align="left">1950-2200</td>
+<td align="left">guji-hambela</td>
+<td align="left">METAD PLC</td>
+<td align="right">300</td>
+<td align="left">60 kg</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">2014</td>
+<td align="left">April 4th, 2015</td>
+<td align="left">metad plc</td>
+<td align="left">Other</td>
+<td align="left">Washed / Wet</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.50</td>
+<td align="right">8.42</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.58</td>
+<td align="right">0.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Green</td>
+<td align="right">2</td>
+<td align="left">April 3rd, 2016</td>
+<td align="left">METAD Agricultural Development plc</td>
+<td align="left">309fcf77415a3661ae83e027f7e5f05dad786e44</td>
+<td align="left">19fef5a731de2db57d16da10287413f5f99bc2dd</td>
+<td align="left">m</td>
+<td align="right">1950</td>
+<td align="right">2200</td>
+<td align="right">2075</td>
+</tr>
+<tr class="even">
+<td align="right">88.83</td>
+<td align="left">Arabica</td>
+<td align="left">ji-ae ahn</td>
+<td align="left">Brazil</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">100</td>
+<td align="left">30 kg</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">2013</td>
+<td align="left">September 3rd, 2013</td>
+<td align="left">Ji-Ae Ahn</td>
+<td align="left">NA</td>
+<td align="left">Natural / Dry</td>
+<td align="right">8.58</td>
+<td align="right">8.42</td>
+<td align="right">8.42</td>
+<td align="right">8.50</td>
+<td align="right">8.25</td>
+<td align="right">8.33</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">8.33</td>
+<td align="right">0.11</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">Bluish-Green</td>
+<td align="right">1</td>
+<td align="left">September 3rd, 2014</td>
+<td align="left">Specialty Coffee Institute of Asia</td>
+<td align="left">726e4891cf2c9a4848768bd34b668124d12c4224</td>
+<td align="left">b70da261fcc84831e3e9620c30a8701540abc200</td>
+<td align="left">m</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="steps" class="section level2">
 <h2>Steps</h2>
+<pre class="r"><code>coffee_ratings_ethiopia &lt;- 
+  select(coffee_ratings, total_cup_points, species, country_of_origin)
+
+coffee_ratings_ethiopia &lt;- 
+  filter(coffee_ratings_ethiopia, country_of_origin == &quot;Ethiopia&quot;)
+
+coffee_ratings_ethiopia &lt;- 
+  arrange(coffee_ratings_ethiopia, total_cup_points)
+
+coffee_ratings_ethiopia</code></pre>
 </div>
 <div id="pipes" class="section level2">
 <h2><em>Pipes</em> <em>( %&gt;% )</em></h2>
@@ -678,21 +2256,17 @@ summary {
   group_by(country_of_origin) %&gt;%
   summarise(avg_rating = mean(total_cup_points),
             median_rating = median(total_cup_points)
-            )</code></pre>
-<pre><code>## # A tibble: 37 x 3
-##    country_of_origin avg_rating median_rating
-##    &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;
-##  1 Brazil                  82.4          82.4
-##  2 Burundi                 81.8          81.8
-##  3 China                   82.9          83.2
-##  4 Colombia                83.1          83.2
-##  5 Costa Rica              82.8          83.2
-##  6 Cote d?Ivoire           79.3          79.3
-##  7 Ecuador                 80.2          78.8
-##  8 El Salvador             83.1          82.8
-##  9 Ethiopia                85.5          85.2
-## 10 Guatemala               81.8          82.5
-## # … with 27 more rows</code></pre>
+            ) %&gt;% 
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   country_of_origin avg_rating median_rating
+##   &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Brazil                  82.4          82.4
+## 2 Burundi                 81.8          81.8
+## 3 China                   82.9          83.2
+## 4 Colombia                83.1          83.2
+## 5 Costa Rica              82.8          83.2
+## 6 Cote d?Ivoire           79.3          79.3</code></pre>
 </div>
 <div id="mutate-we-need-a-new-column" class="section level2">
 <h2><em>Mutate:</em> We need a new column!</h2>
@@ -700,21 +2274,17 @@ summary {
 <p>We didn’t have <code>is_processing_method_full</code> before but we create it by using <code>processing_method</code> variable.</p>
 <pre class="r"><code>coffee_ratings %&gt;% 
   select(species, country_of_origin, processing_method) %&gt;% 
-  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) </code></pre>
-<pre><code>## # A tibble: 1,339 x 4
-##    species country_of_origin processing_method is_processing_method_full
-##    &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;                                 &lt;dbl&gt;
-##  1 Arabica Ethiopia          Washed / Wet                              1
-##  2 Arabica Ethiopia          Washed / Wet                              1
-##  3 Arabica Guatemala         &lt;NA&gt;                                      0
-##  4 Arabica Ethiopia          Natural / Dry                             1
-##  5 Arabica Ethiopia          Washed / Wet                              1
-##  6 Arabica Brazil            Natural / Dry                             1
-##  7 Arabica Peru              Washed / Wet                              1
-##  8 Arabica Ethiopia          &lt;NA&gt;                                      0
-##  9 Arabica Ethiopia          &lt;NA&gt;                                      0
-## 10 Arabica Ethiopia          Natural / Dry                             1
-## # … with 1,329 more rows</code></pre>
+  mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) %&gt;% 
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   species country_of_origin processing_method is_processing_method_full
+##   &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;                                 &lt;dbl&gt;
+## 1 Arabica Ethiopia          Washed / Wet                              1
+## 2 Arabica Ethiopia          Washed / Wet                              1
+## 3 Arabica Guatemala         &lt;NA&gt;                                      0
+## 4 Arabica Ethiopia          Natural / Dry                             1
+## 5 Arabica Ethiopia          Washed / Wet                              1
+## 6 Arabica Brazil            Natural / Dry                             1</code></pre>
 </div>
 <div id="your-turn-lets-put-it-all-together" class="section level2">
 <h2>Your Turn: Let’s put it all together!</h2>

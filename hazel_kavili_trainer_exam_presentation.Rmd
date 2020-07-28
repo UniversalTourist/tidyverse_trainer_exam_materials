@@ -6,6 +6,8 @@ output:
   html_document:
     toc: true
     theme: flatly
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -14,10 +16,14 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Install Libraries
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
-Today we'll focus on `dplyr`, a package that transforms data. dplyr implements a grammar for transforming tabular data.
+Today we'll focus on `dplyr`, a package that transforms data. `dplyr` implements a grammar for transforming tabular data.
 
 ```{r warning=FALSE, message=FALSE, echo=TRUE}
 library(tidyverse)
+```
+
+```{r warning=FALSE, message=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
 ```
 
 ## Load Data Into R
@@ -50,59 +56,91 @@ There are 43 variables (columns) and 1339 rows in our data frame. There is data 
 
 ## Comparison with base R and Tidyverse
 Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
+
 The two code chunks are doing the same thing: selecting two columns from our dataframe. 
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 coffee_ratings[ , c('species', 'country_of_origin')]
 ```
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
+While the base R syntax achieves the same end, the dplyr approach provides a more expressive syntax that is easier to read and write.
+
+```{r eval=FALSE, echo=TRUE}
 select(coffee_ratings, species, country_of_origin)
 ```
 
 
 ## *Select:* Choosing is not losing!
-We are moving to our first dplyr verb. `select` helps us select the variables we want to use or we need for our analysis. 
+We are moving to our first dplyr verb. `select` helps us select the columns/variables of interest from our data frame.
 
-```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
  select(coffee_ratings, species, country_of_origin, color, certification_body)
+```
+
+```{r eval=TRUE, echo=FALSE}
+dt <- select(coffee_ratings, species, country_of_origin, color, certification_body) 
+knitr::kable(head(dt))
 ```
 
 `select` has helpers like the one on the below. You can select range of columns by using `:`
 
-```{r, warning=FALSE, message=FALSE}
+```{r eval=TRUE, echo=TRUE}
 select(coffee_ratings, 1:4, 21:34) 
 ```
 
+```{r eval=TRUE, echo=FALSE}
+dt <- select(coffee_ratings, 1:4, 21:34)  
+knitr::kable(head(dt))
+```
 
 ## *Filter:* Do we want everything?
 `filter` helps us to extract rows that meet logical criteria. 
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
-```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 filter(coffee_ratings, country_of_origin == "Ethiopia")
 ```
 
-```{r, warning=FALSE, message=FALSE, eval=TRUE, echo=TRUE}
+```{r eval=TRUE, echo=FALSE}
+dt <- filter(coffee_ratings, country_of_origin == "Ethiopia") 
+knitr::kable(head(dt))
+```
+
+```{r eval=FALSE, echo=TRUE}
 filter(coffee_ratings, number_of_bags >= 60)
+```
+
+```{r eval=TRUE, echo=FALSE}
+dt <- filter(coffee_ratings, number_of_bags >= 60)
+knitr::kable(head(dt))
 ```
 
 ## *Arrange:*  Let's bring some order to data!
 `arrange` order rows from smallest to largest values. 
 Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
 
-```{r, eval=TRUE, echo=TRUE}
+```{r, eval=FALSE, echo=TRUE}
 arrange(coffee_ratings, total_cup_points)
 ```
 
+```{r eval=TRUE, echo=FALSE}
+dt <- arrange(coffee_ratings, total_cup_points)
+knitr::kable(head(dt))
+```
+
 If we want to order it by descending order of total_cup_points, we can use this syntax.
-```{r, eval=TRUE, echo=TRUE}
+```{r, eval=FALSE, echo=TRUE}
 arrange(coffee_ratings, desc(total_cup_points))
+```
+
+```{r eval=TRUE, echo=FALSE}
+dt <- arrange(coffee_ratings, desc(total_cup_points))
+knitr::kable(head(dt))
 ```
 
 ## Steps
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=TRUE}
 coffee_ratings_ethiopia <- 
   select(coffee_ratings, total_cup_points, species, country_of_origin)
 
