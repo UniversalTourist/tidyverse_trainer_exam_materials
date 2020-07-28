@@ -98,6 +98,9 @@ There are 43 variables (columns) and 1339 rows in our data frame. There is data 
 
 Questions arise
 ========================================================
+- Which coffee species has the highest total_cup_points? 
+- What is the average total_cup_points for each species?
+- How many species are there for each country_of_origin?
 
 
 Comparison with base R and Tidyverse
@@ -325,8 +328,8 @@ Steps
 
 ```r
 coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
-coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
-coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia <- filter(coffee_ratings_ethiopia, country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(coffee_ratings_ethiopia, total_cup_points)
 coffee_ratings_ethiopia
 ```
 

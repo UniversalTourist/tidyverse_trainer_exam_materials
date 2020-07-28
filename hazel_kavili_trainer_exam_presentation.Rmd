@@ -30,7 +30,6 @@ There are some functions to check the structure and summary of the data: `str`, 
 glimpse(coffee_ratings)
 ```
 
-
 ```{r, warning=FALSE, message=FALSE}
 head(coffee_ratings, n = 3)
 ```
@@ -38,7 +37,9 @@ head(coffee_ratings, n = 3)
 There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
 ## Questions arise
-
+- Which coffee species has the highest total_cup_points? 
+- What is the average total_cup_points for each species?
+- How many species are there for each country_of_origin?
 
 ## Comparison with base R and Tidyverse
 Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
@@ -92,13 +93,12 @@ If we want to order it by descending order of total_cup_points, we can use this 
   arrange(coffee_ratings, desc(total_cup_points))
 ```
 
-
 ## Steps
 
 ```{r, eval=FALSE}
 coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
-coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
-coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia <- filter(coffee_ratings_ethiopia, country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(coffee_ratings_ethiopia, total_cup_points)
 coffee_ratings_ethiopia
 ```
 

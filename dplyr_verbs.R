@@ -4,13 +4,9 @@ library(tidyverse)
 #Load data
 coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 
-## write data to csv (do not tell about this in lesson)
-##write_csv(coffee_ratings, "coffee_ratings.csv")
-
 ## First Glimpse
-glimpse(coffee_ratings)
-
 View(coffee_ratings)
+glimpse(coffee_ratings)
 
 head(coffee_ratings, n = 3)
 
