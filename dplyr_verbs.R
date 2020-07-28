@@ -1,10 +1,10 @@
-# Load library
+# Load libraries
 library(tidyverse)
 
 #Load data
 coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 
-## First Glimpse
+## First glimpse
 View(coffee_ratings) #You should now be able to interact with the data set
 glimpse(coffee_ratings)
 
@@ -59,8 +59,6 @@ coffee_ratings %>%
   arrange(desc(number_of_bags))
 
 
-
-
 ## Group by & Summarise
 coffee_ratings %>%
   group_by(species) %>%
@@ -82,7 +80,8 @@ coffee_ratings %>%
 
 ##Solution - 2
 coffee_ratings %>% 
-  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
+  select(total_cup_points, species, country_of_origin, processing_method, 
+         aroma, flavor, aftertaste) %>%
   filter(species == "Arabica") %>% 
   filter(!is.na(country_of_origin)) %>% 
   group_by(country_of_origin) %>% 

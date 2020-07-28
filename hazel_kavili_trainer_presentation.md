@@ -371,7 +371,7 @@ We need to:
 
 ```r
 coffee_ratings data %>% 
-  ____(_:_, number_of_bags) %>% 
+  ____(1:4, number_of_bags) %>% 
   ____(____ == "Brazil") %>%
   ____(total_cup_points > ___) %>% 
   ____(desc(number_of_bags))

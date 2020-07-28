@@ -84,7 +84,7 @@ knitr::kable(head(dt))
 
 `select` has helpers like the one on the below. You can select range of columns by using `:`
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 select(coffee_ratings, 1:4, 21:34) 
 ```
 
@@ -192,7 +192,7 @@ We need to:
 
 ```{r, eval=FALSE, echo = TRUE}
 coffee_ratings data %>% 
-  ____(_:_, number_of_bags) %>% 
+  ____(1:4, number_of_bags) %>% 
   ____(____ == "Brazil") %>%
   ____(total_cup_points > ___) %>% 
   ____(desc(number_of_bags))
@@ -244,13 +244,11 @@ coffee_ratings %>%
   select(species, country_of_origin, processing_method) %>% 
   mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0)) %>% 
   head()
-    
 ```
 
 
 ## Your Turn: Let's put it all together!
-We want to look at the mean of aroma, flavor and aftertast variables by countries.
-Can we find the true order of that code piece?
+We want to look at the mean value of `aroma, flavor and aftertaste` variables by `country_of_origin` for the `species of Arabica`. Can we find the true order of that code piece?
 
 ```{r, eval = FALSE, echo = TRUE}
 1- filter(species == "Arabica")  
@@ -267,7 +265,8 @@ Can we find the true order of that code piece?
 
 
 ## Here is the solution:
-```{r, eval = TRUE, echo = TRUE, warning=FALSE, message=FALSE}
+The order is: `4 - 3 - 1 - 2 - 7 - 6 - 5`
+```{r, eval = TRUE, echo = TRUE}
 coffee_ratings %>% 
   select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
   filter(species == "Arabica") %>% 
@@ -286,6 +285,17 @@ Thank you for joining the training!
 You can find the all lesson materials my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
 
 Any questions? I'd be happy to answer! 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
