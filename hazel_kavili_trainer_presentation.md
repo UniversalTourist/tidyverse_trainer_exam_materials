@@ -1,7 +1,7 @@
 Week 2: Intro to Data Wrangling with dplyr
 ========================================================
 author: Hazel KAVILI
-date: "2020-07-28"
+date: "2020-07-29"
 autosize: true
 
 Install Libraries
@@ -152,11 +152,11 @@ We are moving to our first dplyr verb. `select` helps us select the variables we
 
 
 ```r
-  select(coffee_ratings, 1:4, 21:34) 
+  select(coffee_ratings, 1:4, 21:25) 
 ```
 
 ```
-# A tibble: 1,339 x 18
+# A tibble: 1,339 x 9
    total_cup_points species owner country_of_orig… aroma flavor aftertaste
               <dbl> <chr>   <chr> <chr>            <dbl>  <dbl>      <dbl>
  1             90.6 Arabica meta… Ethiopia          8.67   8.83       8.67
@@ -169,10 +169,7 @@ We are moving to our first dplyr verb. `select` helps us select the variables we
  8             88.7 Arabica ethi… Ethiopia          8.25   8.33       8.5 
  9             88.4 Arabica ethi… Ethiopia          8.67   8.67       8.58
 10             88.2 Arabica diam… Ethiopia          8.08   8.58       8.5 
-# … with 1,329 more rows, and 11 more variables: acidity <dbl>, body <dbl>,
-#   balance <dbl>, uniformity <dbl>, clean_cup <dbl>, sweetness <dbl>,
-#   cupper_points <dbl>, moisture <dbl>, category_one_defects <dbl>,
-#   quakers <dbl>, color <chr>
+# … with 1,329 more rows, and 2 more variables: acidity <dbl>, body <dbl>
 ```
 
 

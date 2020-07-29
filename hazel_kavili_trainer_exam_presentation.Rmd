@@ -39,11 +39,11 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 Let's look at our data frame to get to know it.
 There are some functions to check the structure and summary of the data: `str`, `summary`, `glimpse` are the most common ones.
 
-```{r, warning=FALSE, message=FALSE, eval=FALSE, echo=TRUE}
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
 glimpse(coffee_ratings)
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=FALSE}
 head(coffee_ratings, n = 3)
 ```
 
@@ -85,11 +85,11 @@ knitr::kable(head(dt))
 `select` has helpers like the one on the below. You can select range of columns by using `:`
 
 ```{r eval=FALSE, echo=TRUE}
-select(coffee_ratings, 1:4, 21:34) 
+select(coffee_ratings, 1:4, 21:25) 
 ```
 
 ```{r eval=TRUE, echo=FALSE}
-dt <- select(coffee_ratings, 1:4, 21:34)  
+dt <- select(coffee_ratings, 1:4, 21:25)  
 knitr::kable(head(dt))
 ```
 
@@ -102,7 +102,8 @@ filter(coffee_ratings, country_of_origin == "Ethiopia")
 ```
 
 ```{r eval=TRUE, echo=FALSE}
-dt <- filter(coffee_ratings, country_of_origin == "Ethiopia") 
+dt <- filter(coffee_ratings, country_of_origin == "Ethiopia") %>% 
+      select(1:5)
 knitr::kable(head(dt))
 ```
 
@@ -111,7 +112,8 @@ filter(coffee_ratings, number_of_bags >= 60)
 ```
 
 ```{r eval=TRUE, echo=FALSE}
-dt <- filter(coffee_ratings, number_of_bags >= 60)
+dt <- filter(coffee_ratings, number_of_bags >= 60) %>% 
+        select(1:4, total_cup_points)
 knitr::kable(head(dt))
 ```
 
@@ -124,7 +126,8 @@ arrange(coffee_ratings, total_cup_points)
 ```
 
 ```{r eval=TRUE, echo=FALSE}
-dt <- arrange(coffee_ratings, total_cup_points)
+dt <- arrange(coffee_ratings, total_cup_points) %>% 
+      select(1:4, total_cup_points)
 knitr::kable(head(dt))
 ```
 
@@ -134,11 +137,14 @@ arrange(coffee_ratings, desc(total_cup_points))
 ```
 
 ```{r eval=TRUE, echo=FALSE}
-dt <- arrange(coffee_ratings, desc(total_cup_points))
+dt <- arrange(coffee_ratings, desc(total_cup_points)) %>% 
+      select(1:4, total_cup_points)
 knitr::kable(head(dt))
 ```
 
 ## Steps
+Now we can do some operations on our data frame by using 3 verbs we learned. However, we need to save our data on every step if we want to use it later for next steps, right? 
+Do you see how many times we write coffee_ratings_ethiopia in the code below? 
 
 ```{r, eval=FALSE, echo=TRUE}
 coffee_ratings_ethiopia <- 
@@ -153,11 +159,11 @@ coffee_ratings_ethiopia <-
 coffee_ratings_ethiopia
 ```
 
-##  *Pipes* *( %>% )*
+##  *Pipe Operator* *( %>% )*
 Pipe helps us to connect our dplyr verbs. 
 Passes results on left into first argument of function on right. 
 
-Let's try to do the same thing with pipes and read the code below: 
+Let's try to do the **same** thing with pipes and read the code below: 
 I have the dataframe called coffee_ratings, I call it. 
 I select 3 variables from that data frame and filter it by country_of_origin variable equals to Ethiopia. Then I arrange it by total_cup_points variable in ascending order.
 
@@ -170,9 +176,15 @@ coffee_ratings_ethiopia <-
   arrange(total_cup_points)
 ```
 
-What we see in here is that everything is chained. I can read that code from left to right like a sentence.
+![](/Users/hazelkavili/Desktop/tidyverse_trainer_exam_materials/images/pipe.png)
 
-## Structure of dplyr functions
+What we see in here is that everything is chained. We can read that code from left to right like a sentence.
+Shortcut for pipe operator on keyboard is:
+
+- CMD + shift + M (for Mac)
+- CTRL + shft + M (for Windows)
+
+## Some structure of writing dplyr verbs
 Most of the dplyr verbs have that structure:
 ```{r, eval=FALSE, echo=TRUE}
 1- dplyr_verb(data_frame, colum_name, some_other_arguments)

@@ -13,25 +13,17 @@ head(coffee_ratings, n = 3)
 ## Comparison with base R and Tidyverse
 coffee_ratings[ , c('species', 'country_of_origin')]
 
-coffee_ratings %>% 
-  select(species, country_of_origin)
-
-## Pipes
-coffee_ratings %>%
-  group_by(species) %>%
-  summarise(avg_rating = mean(total_cup_points),
-            proportion = n()/nrow(coffee_ratings))
-
+select(coffee_ratings, species, country_of_origin)
 
 ## Select
 select(coffee_ratings, species, country_of_origin, color, certification_body) 
 
-select(coffee_ratings, 1:4, 21:34) 
+select(coffee_ratings, 1:4, 21:25) 
 
 ##Filter
 filter(coffee_ratings, country_of_origin == "Ethiopia")
 
-filter(coffee_ratings, number_of_bags >= 60)
+filter(coffee_ratings, number_of_bags >= 60) 
   
 ## Arrange
 arrange(coffee_ratings, total_cup_points)
@@ -89,8 +81,6 @@ coffee_ratings %>%
             mean_flavor = mean(flavor),
             mean_aftertaste = mean(aftertaste)) %>%
   arrange(mean_aroma) 
-
-
 
 
 

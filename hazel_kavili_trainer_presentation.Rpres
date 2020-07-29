@@ -79,7 +79,7 @@ We are moving to our first dplyr verb. `select` helps us select the variables we
 `select` has helpers like the one on the below. You can select range of columns by using `:`
 
 ```{r, warning=FALSE, message=FALSE}
-  select(coffee_ratings, 1:4, 21:34) 
+  select(coffee_ratings, 1:4, 21:25) 
 ```
 
 
