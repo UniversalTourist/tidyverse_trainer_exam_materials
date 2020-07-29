@@ -43,6 +43,13 @@ coffee_ratings_ethiopia <-
   filter(country_of_origin == "Ethiopia") %>% 
   arrange(total_cup_points)
   
+## Quiz - 1
+coffee_ratings data %>% 
+  ____(1:4, number_of_bags) %>% 
+  ____(____ == "Brazil") %>%
+  ____(total_cup_points > ___) %>% 
+  ____(desc(number_of_bags))
+
 ## Solution - 1
 coffee_ratings %>% 
   select(1:4, number_of_bags) %>% 
@@ -70,15 +77,23 @@ coffee_ratings %>%
   select(species, country_of_origin, processing_method) %>% 
   mutate(is_processing_method_full = ifelse(!is.na(processing_method), 1, 0))
 
+
+## Quiz - 2
+1- filter(species == "Arabica")  
+2- select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste)
+3- coffee_ratings
+4- arrange(mean_aroma) 
+5- summarise(mean_aroma = mean(aroma),
+             mean_aftertaste = mean(aftertaste))
+6- group_by(country_of_origin)
+
+
 ##Solution - 2
 coffee_ratings %>% 
-  select(total_cup_points, species, country_of_origin, processing_method, 
-         aroma, flavor, aftertaste) %>%
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste) %>%
   filter(species == "Arabica") %>% 
-  filter(!is.na(country_of_origin)) %>% 
   group_by(country_of_origin) %>% 
   summarise(mean_aroma = mean(aroma),
-            mean_flavor = mean(flavor),
             mean_aftertaste = mean(aftertaste)) %>%
   arrange(mean_aroma) 
 

@@ -14,16 +14,16 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+```{r warning=FALSE, message=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+```
+
 ## Install Libraries
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
 Today we'll focus on `dplyr`, a package that transforms data. `dplyr` implements a grammar for transforming tabular data.
 
 ```{r warning=FALSE, message=FALSE, echo=TRUE}
 library(tidyverse)
-```
-
-```{r warning=FALSE, message=FALSE, echo=FALSE, eval=TRUE}
-library(knitr)
 ```
 
 ## Load Data Into R
@@ -51,8 +51,9 @@ There are 43 variables (columns) and 1339 rows in our data frame. There is data 
 
 ## Questions arise
 - Which coffee species has the highest total_cup_points? 
-- What is the average total_cup_points for each species?
+- What is the average total_cup_points for each coffee species?
 - How many species are there for each country_of_origin?
+- (more questions can be produced)
 
 ## Comparison with base R and Tidyverse
 Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
@@ -70,7 +71,7 @@ select(coffee_ratings, species, country_of_origin)
 ```
 
 
-## *Select:* Choosing is not losing!
+## **Select:** *Choosing is not losing!*
 We are moving to our first dplyr verb. `select` helps us select the columns/variables of interest from our data frame.
 
 ```{r eval=FALSE, echo=TRUE}
@@ -93,7 +94,7 @@ dt <- select(coffee_ratings, 1:4, 21:25)
 knitr::kable(head(dt))
 ```
 
-## *Filter:* Do we want everything?
+## **Filter:** *Do we want everything?*
 `filter` helps us to extract rows that meet logical criteria. 
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
@@ -117,7 +118,7 @@ dt <- filter(coffee_ratings, number_of_bags >= 60) %>%
 knitr::kable(head(dt))
 ```
 
-## *Arrange:*  Let's bring some order to data!
+## **Arrange:**  *Let's bring some order to data!*
 `arrange` order rows from smallest to largest values. 
 Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
 
@@ -159,11 +160,11 @@ coffee_ratings_ethiopia <-
 coffee_ratings_ethiopia
 ```
 
-##  *Pipe Operator* *( %>% )*
+##  **Pipe Operator** *( %>% )*
 Pipe helps us to connect our dplyr verbs. 
 Passes results on left into first argument of function on right. 
 
-Let's try to do the **same** thing with pipes and read the code below: 
+Let's try to do the *same* thing with pipes and read the code below: 
 I have the dataframe called coffee_ratings, I call it. 
 I select 3 variables from that data frame and filter it by country_of_origin variable equals to Ethiopia. Then I arrange it by total_cup_points variable in ascending order.
 
@@ -196,11 +197,14 @@ Most of the dplyr verbs have that structure:
 
 
 ## Your Turn: How should we fill the blank areas?
+
 Now it's time for a pop-quiz! 
+
 We need to:
-- Select **total_cup_points, species, owner, countyr_of_origin and number_of_bags** 
-- Then Filter **country of origin for only Brazil** and **total cup points is higher than 70**
-- Then Arrange it by number_of_bags in descending order.
+
+- Select **total_cup_points, species, owner, countyr_of_origin** and **number_of_bags**  
+- Then Filter **country of origin for only Brazil** and **total_cup_points** is higher than 70 
+- Then Arrange it by **number_of_bags** in descending order.
 
 ```{r, eval=FALSE, echo = TRUE}
 coffee_ratings data %>% 
@@ -220,7 +224,7 @@ coffee_ratings %>%
 ```
 
 
-## *Group_by & Summarise:* Let's create associations among groups!
+## **Group_by & Summarise:** *Let's create associations among groups!*
 
 We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is).
 `group_by` gives the data frame a grouping using one or more columns, which modifies the subsequent call to `summarise`. 
@@ -244,7 +248,7 @@ coffee_ratings %>%
   head()
 ```
 
-## *Mutate:* We need a new column!
+## **Mutate:** *We need a new column!*
 
 `mutate` lets us add or overwrite columns by computing a new value for them.
 For example, in the code below, we want a column name `is_processing_method_full` which is filled by checking if `processing_method` have some value or not. If it is not NA, we'll write 1, otherwise 0. 
@@ -260,32 +264,27 @@ coffee_ratings %>%
 
 
 ## Your Turn: Let's put it all together!
-We want to look at the mean value of `aroma, flavor and aftertaste` variables by `country_of_origin` for the `species of Arabica`. Can we find the true order of that code piece?
+We want to look at the mean value of `aroma and aftertaste` variables by `country_of_origin` for the `species of Arabica`. Can we find the true order of that code piece?
 
 ```{r, eval = FALSE, echo = TRUE}
 1- filter(species == "Arabica")  
-2- filter(!is.na(country_of_origin)) 
-3- select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste)
-4- coffee_ratings
-5- arrange(mean_aroma) 
-6- summarise(mean_aroma = mean(aroma),
-            mean_flavor = mean(flavor),
+2- select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste)
+3- coffee_ratings
+4- arrange(mean_aroma) 
+5- summarise(mean_aroma = mean(aroma),
             mean_aftertaste = mean(aftertaste))
-7- group_by(country_of_origin)
-
+6- group_by(country_of_origin)
 ```
 
 
 ## Here is the solution:
-The order is: `4 - 3 - 1 - 2 - 7 - 6 - 5`
-```{r, eval = TRUE, echo = TRUE}
+The order is: `3 - 2 - 1 - 6 - 5 - 4`
+```{r, eval = TRUE, echo = TRUE, message=FALSE, warning=FALSE}
 coffee_ratings %>% 
-  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %>%
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste) %>%
   filter(species == "Arabica") %>% 
-  filter(!is.na(country_of_origin)) %>% 
   group_by(country_of_origin) %>% 
   summarise(mean_aroma = mean(aroma),
-            mean_flavor = mean(flavor),
             mean_aftertaste = mean(aftertaste)) %>%
   arrange(mean_aroma) 
 ```

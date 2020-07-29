@@ -394,16 +394,16 @@ summary {
 <li><a href="#summary-of-data">Summary of data</a></li>
 <li><a href="#questions-arise">Questions arise</a></li>
 <li><a href="#comparison-with-base-r-and-tidyverse">Comparison with base R and Tidyverse</a></li>
-<li><a href="#select-choosing-is-not-losing"><em>Select:</em> Choosing is not losing!</a></li>
-<li><a href="#filter-do-we-want-everything"><em>Filter:</em> Do we want everything?</a></li>
-<li><a href="#arrange-lets-bring-some-order-to-data"><em>Arrange:</em> Let’s bring some order to data!</a></li>
+<li><a href="#select-choosing-is-not-losing"><strong>Select:</strong> <em>Choosing is not losing!</em></a></li>
+<li><a href="#filter-do-we-want-everything"><strong>Filter:</strong> <em>Do we want everything?</em></a></li>
+<li><a href="#arrange-lets-bring-some-order-to-data"><strong>Arrange:</strong> <em>Let’s bring some order to data!</em></a></li>
 <li><a href="#steps">Steps</a></li>
-<li><a href="#pipe-operator"><em>Pipe Operator</em> <em>( %&gt;% )</em></a></li>
+<li><a href="#pipe-operator"><strong>Pipe Operator</strong> <em>( %&gt;% )</em></a></li>
 <li><a href="#some-structure-of-writing-dplyr-verbs">Some structure of writing dplyr verbs</a></li>
 <li><a href="#your-turn-how-should-we-fill-the-blank-areas">Your Turn: How should we fill the blank areas?</a></li>
 <li><a href="#here-is-the-solution">Here is the solution:</a></li>
-<li><a href="#group_by-summarise-lets-create-associations-among-groups"><em>Group_by &amp; Summarise:</em> Let’s create associations among groups!</a></li>
-<li><a href="#mutate-we-need-a-new-column"><em>Mutate:</em> We need a new column!</a></li>
+<li><a href="#group_by-summarise-lets-create-associations-among-groups"><strong>Group_by &amp; Summarise:</strong> <em>Let’s create associations among groups!</em></a></li>
+<li><a href="#mutate-we-need-a-new-column"><strong>Mutate:</strong> <em>We need a new column!</em></a></li>
 <li><a href="#your-turn-lets-put-it-all-together">Your Turn: Let’s put it all together!</a></li>
 <li><a href="#here-is-the-solution-1">Here is the solution:</a></li>
 <li><a href="#good-job">Good job!</a></li>
@@ -476,8 +476,9 @@ summary {
 <h2>Questions arise</h2>
 <ul>
 <li>Which coffee species has the highest total_cup_points?</li>
-<li>What is the average total_cup_points for each species?</li>
+<li>What is the average total_cup_points for each coffee species?</li>
 <li>How many species are there for each country_of_origin?</li>
+<li>(more questions can be produced)</li>
 </ul>
 </div>
 <div id="comparison-with-base-r-and-tidyverse" class="section level2">
@@ -489,7 +490,7 @@ summary {
 <pre class="r"><code>select(coffee_ratings, species, country_of_origin)</code></pre>
 </div>
 <div id="select-choosing-is-not-losing" class="section level2">
-<h2><em>Select:</em> Choosing is not losing!</h2>
+<h2><strong>Select:</strong> <em>Choosing is not losing!</em></h2>
 <p>We are moving to our first dplyr verb. <code>select</code> helps us select the columns/variables of interest from our data frame.</p>
 <pre class="r"><code> select(coffee_ratings, species, country_of_origin, color, certification_body)</code></pre>
 <table>
@@ -638,7 +639,7 @@ summary {
 </table>
 </div>
 <div id="filter-do-we-want-everything" class="section level2">
-<h2><em>Filter:</em> Do we want everything?</h2>
+<h2><strong>Filter:</strong> <em>Do we want everything?</em></h2>
 <p><code>filter</code> helps us to extract rows that meet logical criteria. Let’s say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is <code>filter</code> our dataset by using necessary column and value:</p>
 <pre class="r"><code>filter(coffee_ratings, country_of_origin == &quot;Ethiopia&quot;)</code></pre>
 <table>
@@ -754,7 +755,7 @@ summary {
 </table>
 </div>
 <div id="arrange-lets-bring-some-order-to-data" class="section level2">
-<h2><em>Arrange:</em> Let’s bring some order to data!</h2>
+<h2><strong>Arrange:</strong> <em>Let’s bring some order to data!</em></h2>
 <p><code>arrange</code> order rows from smallest to largest values. Let’s say we want to look at our data frame arranged by <code>total_cup_points</code>. In default, your dataset will be arranged bu ascending order.</p>
 <pre class="r"><code>arrange(coffee_ratings, total_cup_points)</code></pre>
 <table>
@@ -871,9 +872,9 @@ coffee_ratings_ethiopia &lt;-
 coffee_ratings_ethiopia</code></pre>
 </div>
 <div id="pipe-operator" class="section level2">
-<h2><em>Pipe Operator</em> <em>( %&gt;% )</em></h2>
+<h2><strong>Pipe Operator</strong> <em>( %&gt;% )</em></h2>
 <p>Pipe helps us to connect our dplyr verbs. Passes results on left into first argument of function on right.</p>
-<p>Let’s try to do the <strong>same</strong> thing with pipes and read the code below: I have the dataframe called coffee_ratings, I call it. I select 3 variables from that data frame and filter it by country_of_origin variable equals to Ethiopia. Then I arrange it by total_cup_points variable in ascending order.</p>
+<p>Let’s try to do the <em>same</em> thing with pipes and read the code below: I have the dataframe called coffee_ratings, I call it. I select 3 variables from that data frame and filter it by country_of_origin variable equals to Ethiopia. Then I arrange it by total_cup_points variable in ascending order.</p>
 <pre class="r"><code>coffee_ratings_ethiopia &lt;- 
   coffee_ratings %&gt;%
   select(species, certification_body, country_of_origin) %&gt;% 
@@ -897,7 +898,14 @@ coffee_ratings_ethiopia</code></pre>
 </div>
 <div id="your-turn-how-should-we-fill-the-blank-areas" class="section level2">
 <h2>Your Turn: How should we fill the blank areas?</h2>
-<p>Now it’s time for a pop-quiz! We need to: - Select <strong>total_cup_points, species, owner, countyr_of_origin and number_of_bags</strong> - Then Filter <strong>country of origin for only Brazil</strong> and <strong>total cup points is higher than 70</strong> - Then Arrange it by number_of_bags in descending order.</p>
+<p>Now it’s time for a pop-quiz!</p>
+<p>We need to:</p>
+<ul>
+<li>Select <strong>total_cup_points, species, owner, countyr_of_origin</strong> and <strong>number_of_bags</strong><br />
+</li>
+<li>Then Filter <strong>country of origin for only Brazil</strong> and <strong>total_cup_points</strong> is higher than 70</li>
+<li>Then Arrange it by <strong>number_of_bags</strong> in descending order.</li>
+</ul>
 <pre class="r"><code>coffee_ratings data %&gt;% 
   ____(1:4, number_of_bags) %&gt;% 
   ____(____ == &quot;Brazil&quot;) %&gt;%
@@ -927,7 +935,7 @@ coffee_ratings_ethiopia</code></pre>
 ## # … with 122 more rows</code></pre>
 </div>
 <div id="group_by-summarise-lets-create-associations-among-groups" class="section level2">
-<h2><em>Group_by &amp; Summarise:</em> Let’s create associations among groups!</h2>
+<h2><strong>Group_by &amp; Summarise:</strong> <em>Let’s create associations among groups!</em></h2>
 <p>We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is). <code>group_by</code> gives the data frame a grouping using one or more columns, which modifies the subsequent call to <code>summarise</code>.</p>
 <p>We can use functions like <code>mean</code>, <code>median</code>, <code>sum</code>, <code>sd</code>, <code>max</code>, <code>min</code> to find out some group statistics inside of <code>summarise</code> function.</p>
 <pre class="r"><code>coffee_ratings %&gt;%
@@ -956,7 +964,7 @@ coffee_ratings_ethiopia</code></pre>
 ## 6 Cote d?Ivoire           79.3          79.3</code></pre>
 </div>
 <div id="mutate-we-need-a-new-column" class="section level2">
-<h2><em>Mutate:</em> We need a new column!</h2>
+<h2><strong>Mutate:</strong> <em>We need a new column!</em></h2>
 <p><code>mutate</code> lets us add or overwrite columns by computing a new value for them. For example, in the code below, we want a column name <code>is_processing_method_full</code> which is filled by checking if <code>processing_method</code> have some value or not. If it is not NA, we’ll write 1, otherwise 0.</p>
 <p>We didn’t have <code>is_processing_method_full</code> before but we create it by using <code>processing_method</code> variable.</p>
 <pre class="r"><code>coffee_ratings %&gt;% 
@@ -975,44 +983,39 @@ coffee_ratings_ethiopia</code></pre>
 </div>
 <div id="your-turn-lets-put-it-all-together" class="section level2">
 <h2>Your Turn: Let’s put it all together!</h2>
-<p>We want to look at the mean value of <code>aroma, flavor and aftertaste</code> variables by <code>country_of_origin</code> for the <code>species of Arabica</code>. Can we find the true order of that code piece?</p>
+<p>We want to look at the mean value of <code>aroma and aftertaste</code> variables by <code>country_of_origin</code> for the <code>species of Arabica</code>. Can we find the true order of that code piece?</p>
 <pre class="r"><code>1- filter(species == &quot;Arabica&quot;)  
-2- filter(!is.na(country_of_origin)) 
-3- select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste)
-4- coffee_ratings
-5- arrange(mean_aroma) 
-6- summarise(mean_aroma = mean(aroma),
-            mean_flavor = mean(flavor),
+2- select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste)
+3- coffee_ratings
+4- arrange(mean_aroma) 
+5- summarise(mean_aroma = mean(aroma),
             mean_aftertaste = mean(aftertaste))
-7- group_by(country_of_origin)</code></pre>
+6- group_by(country_of_origin)</code></pre>
 </div>
 <div id="here-is-the-solution-1" class="section level2">
 <h2>Here is the solution:</h2>
-<p>The order is: <code>4 - 3 - 1 - 2 - 7 - 6 - 5</code></p>
+<p>The order is: <code>3 - 2 - 1 - 6 - 5 - 4</code></p>
 <pre class="r"><code>coffee_ratings %&gt;% 
-  select(total_cup_points, species, country_of_origin, processing_method, aroma, flavor, aftertaste) %&gt;%
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste) %&gt;%
   filter(species == &quot;Arabica&quot;) %&gt;% 
-  filter(!is.na(country_of_origin)) %&gt;% 
   group_by(country_of_origin) %&gt;% 
   summarise(mean_aroma = mean(aroma),
-            mean_flavor = mean(flavor),
             mean_aftertaste = mean(aftertaste)) %&gt;%
   arrange(mean_aroma) </code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre><code>## # A tibble: 36 x 4
-##    country_of_origin mean_aroma mean_flavor mean_aftertaste
-##    &lt;chr&gt;                  &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
-##  1 Haiti                   7.15        7.00            7.11
-##  2 Mauritius               7.25        7.25            7.17
-##  3 Honduras                7.29        7.23            7.06
-##  4 Myanmar                 7.30        7.33            7.12
-##  5 Nicaragua               7.33        7.32            7.20
-##  6 Philippines             7.36        7.23            7.30
-##  7 Burundi                 7.42        7.46            7.25
-##  8 Cote d?Ivoire           7.42        7.25            6.83
-##  9 Mexico                  7.46        7.38            7.23
-## 10 Vietnam                 7.48        7.48            7.30
-## # … with 26 more rows</code></pre>
+<pre><code>## # A tibble: 37 x 3
+##    country_of_origin mean_aroma mean_aftertaste
+##    &lt;chr&gt;                  &lt;dbl&gt;           &lt;dbl&gt;
+##  1 &lt;NA&gt;                    6.75            6.42
+##  2 Haiti                   7.15            7.11
+##  3 Mauritius               7.25            7.17
+##  4 Honduras                7.29            7.06
+##  5 Myanmar                 7.30            7.12
+##  6 Nicaragua               7.33            7.20
+##  7 Philippines             7.36            7.30
+##  8 Burundi                 7.42            7.25
+##  9 Cote d?Ivoire           7.42            6.83
+## 10 Mexico                  7.46            7.23
+## # … with 27 more rows</code></pre>
 </div>
 <div id="good-job" class="section level2">
 <h2>Good job!</h2>
