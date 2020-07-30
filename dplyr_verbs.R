@@ -20,6 +20,8 @@ select(coffee_ratings, species, country_of_origin, color, certification_body)
 
 select(coffee_ratings, 1:4, 21:25) 
 
+coffee_ratings_short <- select(coffee_ratings, 1:4, 21:25)  
+
 ##Filter
 filter(coffee_ratings, country_of_origin == "Ethiopia")
 
@@ -32,14 +34,14 @@ arrange(coffee_ratings, desc(total_cup_points))
 
 ## Steps
 coffee_ratings_ethiopia <- select(coffee_ratings, total_cup_points, species, country_of_origin)
-coffee_ratings_ethiopia <- filter(country_of_origin == "Ethiopia")
-coffee_ratings_ethiopia <- arrange(total_cup_points)
+coffee_ratings_ethiopia <- filter(coffee_ratings_ethiopia, country_of_origin == "Ethiopia")
+coffee_ratings_ethiopia <- arrange(coffee_ratings_ethiopia, total_cup_points)
 coffee_ratings_ethiopia
 
 ## Pipes
 coffee_ratings_ethiopia <- 
   coffee_ratings %>%
-  select(species, certification_body, country_of_origin) %>% 
+  select(total_cup_points, species, country_of_origin) %>% 
   filter(country_of_origin == "Ethiopia") %>% 
   arrange(total_cup_points)
   

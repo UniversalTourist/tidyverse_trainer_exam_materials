@@ -18,11 +18,13 @@ knitr::opts_chunk$set(echo = FALSE)
 library(knitr)
 ```
 
-## Install Libraries
+## Load Packages
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
-Today we'll focus on `dplyr`, a package that transforms data. `dplyr` implements a grammar for transforming tabular data.
+Today we'll focus on `dplyr`, a package that helps us to transforms data. 
+`dplyr` implements a grammar for transforming tabular data.
 
 ```{r warning=FALSE, message=FALSE, echo=TRUE}
+#install.packages("tidyverse")
 library(tidyverse)
 ```
 
@@ -50,12 +52,15 @@ head(coffee_ratings, n = 3)
 There are 43 variables (columns) and 1339 rows in our data frame. There is data for both Arabica and Robusta beans, across many countries and professionally rated on a 0-100 scale. All sorts of scoring/ratings for things like acidity, sweetness, fragrance, balance, etc - may be useful for either separating into visualizations/categories or for modeling/recommenders.
 
 ## Questions arise
+Data analysis starts with questions, let's try to produce some questions together, by just looking at the data:
+
 - Which coffee species has the highest total_cup_points? 
 - What is the average total_cup_points for each coffee species?
+- What is the proportion of those coffee species in total_cup_points?
 - How many species are there for each country_of_origin?
-- (more questions can be produced)
+- (many more questions can be produced)
 
-## Comparison with base R and Tidyverse
+## Base R vs dplyr
 Before moving into dplyr verbs, I'd like to show you a comparison of base R and tidyverse syntax. 
 
 The two code chunks are doing the same thing: selecting two columns from our dataframe. 
@@ -94,6 +99,8 @@ dt <- select(coffee_ratings, 1:4, 21:25)
 knitr::kable(head(dt))
 ```
 
+`select` function returns a modified copy, doesn’t change the data.
+
 ## **Filter:** *Do we want everything?*
 `filter` helps us to extract rows that meet logical criteria. 
 Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
@@ -114,13 +121,13 @@ filter(coffee_ratings, number_of_bags >= 60)
 
 ```{r eval=TRUE, echo=FALSE}
 dt <- filter(coffee_ratings, number_of_bags >= 60) %>% 
-        select(1:4, total_cup_points)
+        select(1:4, total_cup_points, number_of_bags)
 knitr::kable(head(dt))
 ```
 
 ## **Arrange:**  *Let's bring some order to data!*
 `arrange` order rows from smallest to largest values. 
-Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged bu ascending order.
+Let's say we want to look at our data frame arranged by `total_cup_points`. In default, your dataset will be arranged by ascending order.
 
 ```{r, eval=FALSE, echo=TRUE}
 arrange(coffee_ratings, total_cup_points)
@@ -172,12 +179,12 @@ I select 3 variables from that data frame and filter it by country_of_origin var
 ```{r, eval = FALSE, warning=FALSE, message=FALSE, echo = TRUE}
 coffee_ratings_ethiopia <- 
   coffee_ratings %>%
-  select(species, certification_body, country_of_origin) %>% 
+  select(total_cup_points, species, country_of_origin) %>% 
   filter(country_of_origin == "Ethiopia") %>% 
   arrange(total_cup_points)
 ```
 
-![](/Users/hazelkavili/Desktop/tidyverse_trainer_exam_materials/images/pipe.png)
+![](images/pipe.png)
 
 What we see in here is that everything is chained. We can read that code from left to right like a sentence.
 Shortcut for pipe operator on keyboard is:
@@ -231,6 +238,8 @@ We often want to look at our data by some group (if we have) for example country
 
 We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics inside of `summarise` function.
 
+Here is an exmaple. One of the questions on the above was "What is the average total_cup_points for each coffee species?". Let's try to find some answer to that question:
+
 ```{r, eval=TRUE, echo = TRUE, warning=FALSE, message=FALSE}
 coffee_ratings %>%
   group_by(species) %>%
@@ -244,9 +253,11 @@ coffee_ratings %>%
   group_by(country_of_origin) %>%
   summarise(avg_rating = mean(total_cup_points),
             median_rating = median(total_cup_points)
-            ) %>% 
-  head()
+            )
 ```
+
+`summarise` function builds a new dataset that contains only the summarising statistics that you calculated.
+
 
 ## **Mutate:** *We need a new column!*
 
