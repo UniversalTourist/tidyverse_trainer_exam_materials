@@ -46,7 +46,7 @@ coffee_ratings_ethiopia <-
   arrange(total_cup_points)
   
 ## Quiz - 1
-coffee_ratings data %>% 
+coffee_ratings %>% 
   ____(1:4, number_of_bags) %>% 
   ____(____ == "Brazil") %>%
   ____(total_cup_points > ___) %>% 

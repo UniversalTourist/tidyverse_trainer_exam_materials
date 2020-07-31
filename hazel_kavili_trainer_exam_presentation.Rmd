@@ -20,8 +20,7 @@ library(knitr)
 
 ## Load Packages
 We'll load the packages with `library(tidyverse)` instead of loading the core packages one by one. 
-Today we'll focus on `dplyr`, a package that helps us to transforms data. 
-`dplyr` implements a grammar for transforming tabular data.
+Today we'll focus on `dplyr`, a package that helps us to transform data. 
 
 ```{r warning=FALSE, message=FALSE, echo=TRUE}
 #install.packages("tidyverse")
@@ -35,6 +34,8 @@ We'll use `read_csv` function from `readr` package to get the data, and assign i
 
 ```{r, warning=FALSE, message=FALSE, echo=TRUE}
 coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+#coffee_ratings <- read_csv("data/coffee_ratings.csv")
 ```
 
 ## Summary of data
@@ -139,7 +140,7 @@ dt <- arrange(coffee_ratings, total_cup_points) %>%
 knitr::kable(head(dt))
 ```
 
-If we want to order it by descending order of total_cup_points, we can use this syntax.
+If we want to order it by descending order of total_cup_points, we can use the syntax below:
 ```{r, eval=FALSE, echo=TRUE}
 arrange(coffee_ratings, desc(total_cup_points))
 ```
@@ -214,10 +215,10 @@ We need to:
 - Then Arrange it by **number_of_bags** in descending order.
 
 ```{r, eval=FALSE, echo = TRUE}
-coffee_ratings data %>% 
+coffee_ratings %>% 
   ____(1:4, number_of_bags) %>% 
-  ____(____ == "Brazil") %>%
-  ____(total_cup_points > ___) %>% 
+  ____(country_of_origin == "Brazil") %>%
+  ____(total_cup_points > 70) %>% 
   ____(desc(number_of_bags))
 ```
 
@@ -233,12 +234,12 @@ coffee_ratings %>%
 
 ## **Group_by & Summarise:** *Let's create associations among groups!*
 
-We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences (if there is).
+We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences or similarities (if there is).
 `group_by` gives the data frame a grouping using one or more columns, which modifies the subsequent call to `summarise`. 
 
 We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics inside of `summarise` function.
 
-Here is an exmaple. One of the questions on the above was "What is the average total_cup_points for each coffee species?". Let's try to find some answer to that question:
+Here is an example. One of the questions on the above was "What is the average total_cup_points for each coffee species?". Let's try to find some answer to that question:
 
 ```{r, eval=TRUE, echo = TRUE, warning=FALSE, message=FALSE}
 coffee_ratings %>%
@@ -247,16 +248,17 @@ coffee_ratings %>%
             proportion = n()/nrow(coffee_ratings))
 ```
 
+`summarise` function builds a new dataset that contains only the summarising statistics that you calculated. 
+
+Let's look at the `average and median total_cup_points` grouped by `country_of_origin` this time:
 
 ```{r, eval=TRUE, echo = TRUE, warning=FALSE, message=FALSE}
 coffee_ratings %>%
   group_by(country_of_origin) %>%
   summarise(avg_rating = mean(total_cup_points),
-            median_rating = median(total_cup_points)
-            )
+            median_rating = median(total_cup_points))
 ```
 
-`summarise` function builds a new dataset that contains only the summarising statistics that you calculated.
 
 
 ## **Mutate:** *We need a new column!*
@@ -275,7 +277,8 @@ coffee_ratings %>%
 
 
 ## Your Turn: Let's put it all together!
-We want to look at the mean value of `aroma and aftertaste` variables by `country_of_origin` for the `species of Arabica`. Can we find the true order of that code piece?
+We need to look at the `mean value of aroma and aftertaste` variables by `country_of_origin` for the `species of Arabica`. 
+Can we find the true order of that code piece to achieve our goal?
 
 ```{r, eval = FALSE, echo = TRUE}
 1- filter(species == "Arabica")  
@@ -301,10 +304,10 @@ coffee_ratings %>%
 ```
 
 
-## Good job!
+## Great job!
 Thank you for joining the training! 
 
-You can find the all lesson materials my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
+You can find the lesson materials on my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
 
 Any questions? I'd be happy to answer! 
 
