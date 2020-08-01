@@ -270,6 +270,8 @@ coffee_ratings %>%
 ## **Mutate:** *We need a new column!*
 
 `mutate` lets us add or overwrite columns by computing a new value for them.
+![](images/mutate.png)
+
 For example, in the code below, we want a column name `is_processing_method_full` which is filled by checking if `processing_method` have some value or not. If it is not NA, we'll write 1, otherwise 0. 
 
 We didn't have `is_processing_method_full` before but we create it by using `processing_method` variable.
