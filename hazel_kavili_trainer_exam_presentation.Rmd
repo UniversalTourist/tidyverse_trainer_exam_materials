@@ -110,6 +110,18 @@ Let's say we want to look at our coffee_ratings dataset only for Ethiopia origin
 
 ![](images/filter.png)
 
+We can use all the logical operator inside of filter function:
+
+```{r eval=FALSE, echo=TRUE}
+<, >, 
+<=, >=,
+==, !=, 
+!x == "a", 
+x == "a" & y == "b", 
+x == "a" | y == "b"
+```
+
+
 ```{r eval=FALSE, echo=TRUE}
 filter(coffee_ratings, country_of_origin == "Ethiopia")
 ```
@@ -250,8 +262,7 @@ Here is an example. One of the questions on the above was "What is the average t
 ```{r, eval=TRUE, echo = TRUE, warning=FALSE, message=FALSE}
 coffee_ratings %>%
   group_by(species) %>%
-  summarise(avg_rating = mean(total_cup_points),
-            proportion = n()/nrow(coffee_ratings))
+  summarise(avg_rating = mean(total_cup_points))
 ```
 
 `summarise` function builds a new dataset that contains only the summarising statistics that you calculated. 
@@ -300,7 +311,7 @@ You have 2 minutes:
 4- arrange(desc(mean_aroma)) 
 5- summarise(mean_aroma = mean(aroma),
             mean_aftertaste = mean(aftertaste))
-6- group_by(country_of_origin)
+6- group_by(country_of_origin, is_color_full)
 7- mutate(is_color_full = ifelse(!is.na(color), 1, 0))
 ```
 
@@ -321,23 +332,9 @@ coffee_ratings %>%
 
 
 ## Great job!
+Well done everyone! 
 Thank you for joining the training! 
 
 You can find the lesson materials on my [Github page.](https://github.com/UniversalTourist/tidyverse_trainer_exam_materials)
 
-Any questions? I'd be happy to answer! 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Any questions? I'd be happy to answer!
