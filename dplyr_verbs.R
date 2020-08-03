@@ -2,7 +2,7 @@
 library(tidyverse)
 
 #Load data
-coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+#coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 coffee_ratings <- read_csv("data/coffee_ratings.csv")
 
 ## First glimpse
@@ -21,7 +21,6 @@ select(coffee_ratings, species, country_of_origin, color, certification_body)
 
 select(coffee_ratings, 1:4, 21:25) 
 
-coffee_ratings_short <- select(coffee_ratings, 1:4, 21:25)  
 
 ##Filter
 filter(coffee_ratings, country_of_origin == "Ethiopia")
@@ -89,16 +88,18 @@ coffee_ratings %>%
 5- summarise(mean_aroma = mean(aroma),
              mean_aftertaste = mean(aftertaste))
 6- group_by(country_of_origin)
+7- mutate(is_color_full = ifelse(!is.na(color), 1, 0))
 
 
 ##Solution - 2
 coffee_ratings %>% 
-  select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste) %>%
+  select(total_cup_points, species, country_of_origin, processing_method, aroma, aftertaste, color) %>%
   filter(species == "Arabica") %>% 
-  group_by(country_of_origin) %>% 
+  mutate(is_color_full = ifelse(!is.na(color), 1, 0)) %>% 
+  group_by(country_of_origin, is_color_full) %>% 
   summarise(mean_aroma = mean(aroma),
             mean_aftertaste = mean(aftertaste)) %>%
-  arrange(mean_aroma) 
+  arrange(desc(mean_aroma))
 
 
 
