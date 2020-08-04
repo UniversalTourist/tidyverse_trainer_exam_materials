@@ -106,7 +106,6 @@ knitr::kable(head(dt))
 
 ## **Filter:** *Do we want everything?*
 `filter` helps us to extract rows that meet logical criteria. 
-Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
 ![](images/filter.png)
 
@@ -121,6 +120,7 @@ x == "a" & y == "b",
 x == "a" | y == "b"
 ```
 
+Let's say we want to look at our coffee_ratings dataset only for Ethiopia originated coffees. Then what we need to do is `filter` our dataset by using necessary column and value:
 
 ```{r eval=FALSE, echo=TRUE}
 filter(coffee_ratings, country_of_origin == "Ethiopia")
@@ -209,16 +209,6 @@ Shortcut for pipe operator on keyboard is:
 - CMD + shift + M (for Mac)
 - CTRL + shft + M (for Windows)
 
-## Some structure of writing dplyr verbs
-Most of the dplyr verbs have that structure:
-```{r, eval=FALSE, echo=TRUE}
-1- dplyr_verb(data_frame, colum_name, some_other_arguments)
-
-2- data_frame %>% 
-    dplyr_verb(column_name, some_other_arguments) %>% 
-    dplyr_verb(column_name, some_other_arguments)
-```
-
 
 ## Your Turn: How should we fill the blank areas?
 
@@ -252,7 +242,8 @@ coffee_ratings %>%
 
 ## **Group_by & Summarise:** *Let's create associations among groups!*
 
-We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences or similarities (if there is).
+We often want to look at our data by some group (if we have) for example country, year, age, gender, education, etc. to spot some differences or similarities (if there is). It helps compare different subsets of our data.
+
 `group_by` gives the data frame a grouping using one or more columns, which modifies the subsequent call to `summarise`. 
 
 We can use functions like `mean`, `median`, `sum`, `sd`, `max`, `min` to find out some group statistics inside of `summarise` function.
@@ -265,7 +256,7 @@ coffee_ratings %>%
   summarise(avg_rating = mean(total_cup_points))
 ```
 
-`summarise` function builds a new dataset that contains only the summarising statistics that you calculated. 
+`summarise` function builds a new dataset that contains only the summarising statistics that you calculated: 
 
 ![](images/summary.png)
 

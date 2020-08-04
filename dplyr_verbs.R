@@ -2,14 +2,16 @@
 library(tidyverse)
 
 #Load data
-#coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
 coffee_ratings <- read_csv("data/coffee_ratings.csv")
 
 ## First glimpse
 View(coffee_ratings) #You should now be able to interact with the data set
+
 glimpse(coffee_ratings)
 
-head(coffee_ratings, n = 3)
+head(coffee_ratings)
 
 ## Comparison with base R and Tidyverse
 coffee_ratings[ , c('species', 'country_of_origin')]
